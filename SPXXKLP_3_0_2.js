@@ -99,12 +99,8 @@
   const bugsCenter = config.bugCenter.translation;
   const bugsTranslatorsTable = config.bugCenter.translator;
   const translatorColorTable = config.bugCenter.color;
-  const spxxVersion = version;
+  const spxxklpVersion = version;
 
-  /**
-   * Just a simple file to get the header and footer of an article.
-   * This needs continuous updates according to https://www.mcbbs.net/thread-1253320-1-1.html#pid23311399.
-   */
   function getHeader(articleType, type) {
     if (articleType.toLowerCase() !== 'news') {
       return `[align=left][color=#388e3c][font=-apple-system, BlinkMacSystemFont, &quot;][size=5]|[/size][/font][/color][size=4][font=-apple-system, BlinkMacSystemFont, &quot;]本文内容按照 [/font][/size][font=-apple-system, BlinkMacSystemFont, &quot;][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57]CC BY-NC-SA 4.0[/color][/size][/url][/font][size=4][font=-apple-system, BlinkMacSystemFont, &quot;] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/font][/size][/align][/align][/align][/align][hr]\n`;
@@ -157,9 +153,11 @@
       return `${totalMinutes < 0 ? '+' : '-'}${padTime(hours)}${padTime(minutes)}`;
     }
 
-    const poweredBy = `[align=center][size=1][color=Silver]Powered by SPXXKLP ${spxxVersion} with love
+    const poweredBy = `[align=center][size=1][color=Silver]Powered by SPXXKLP ${spxxklpVersion} with love
 Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 javascript
   }-${padTime(time.getDate())} ${padTime(time.getHours())}:${padTime(time.getMinutes())} ${toHoursAndMinutes(time.getTimezoneOffset())}[/color][/size][/align]`;
+  
+/*Same contents,change if necessary.**/
 
     switch (type) {
       case VersionType.Snapshot:
@@ -517,7 +515,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     dl: async (ele, ctx) => {
       // The final <dd> after converted will contains an footer comma '，'
       // So I don't add any comma before '译者'.
-      const ans = `\n\n${await converters.recurse(ele, ctx)}\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] v${spxxVersion}】\n\n`;
+      const ans = `\n\n${await converters.recurse(ele, ctx)}\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] v${spxxklpVersion}】\n\n`;
       return ans;
     },
     dd: async (ele, ctx) => {
@@ -1108,7 +1106,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const ans = `${header}[align=center][size=6][b][color=Silver]${title}[/color][/b][/size]
 ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[indent][indent]${content}\n
 [b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u]${ctx.url.match(/https:\/\/(.*?)\//)[1]} ${posted.year} 年 ${posted.month} 月 ${posted.day} 日发布的 ${ctx.title}[/u][/color][/url]】[/b]
-【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXX[/u][/color][/url] Userscript v${spxxVersion}】[/indent][/indent]\n\n${footer}`;
+【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXX[/u][/color][/url] Userscript v${spxxklpVersion}】[/indent][/indent]\n\n${footer}`;
     return ans;
   }
 

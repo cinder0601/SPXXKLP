@@ -11,6 +11,7 @@ SPXX project is licensed under [CC0-1.0](https://creativecommons.org/publicdomai
 
 # Contributers
 SPXXKLP is written by Cinder0601 based on SPXX User Script v2.4.14.
+Got help from [Redstone-D](https://github.com/Redstone-D) during development.
 
 # Related Hyperlinks
 SPXX Project:https://github.com/SPXFellow/spxx

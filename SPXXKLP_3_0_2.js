@@ -1106,7 +1106,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const ans = `${header}[align=center][size=6][b][color=Silver]${title}[/color][/b][/size]
 ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[indent][indent]${content}\n
 [b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u]${ctx.url.match(/https:\/\/(.*?)\//)[1]} ${posted.year} 年 ${posted.month} 月 ${posted.day} 日发布的 ${ctx.title}[/u][/color][/url]】[/b]
-【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXX[/u][/color][/url] Userscript v${spxxklpVersion}】[/indent][/indent]\n\n${footer}`;
+【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] Userscript v${spxxklpVersion}】[/indent][/indent]\n\n${footer}`;
     return ans;
   }
 

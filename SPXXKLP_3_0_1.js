@@ -524,7 +524,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     dl: async (ele, ctx) => {
       // The final <dd> after converted will contains an footer comma '，'
       // So I don't add any comma before '译者'.
-      const ans = `\n\n${await converters.recurse(ele, ctx)}\n【本文排版借助了：[url=https://www.mcbbs.net/thread-1266030-1-1.html][color=#388d40][u]SPXXKLP[/u][/color][/url] v${spxxVersion}】\n\n`;
+      const ans = `\n\n${await converters.recurse(ele, ctx)}\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] v${spxxVersion}】\n\n`;
       return ans;
     },
     dd: async (ele, ctx) => {
@@ -1115,7 +1115,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const ans = `${header}[align=center][size=6][b][color=Silver]${title}[/color][/b][/size]
 ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[indent][indent]${content}\n
 [b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u]${ctx.url.match(/https:\/\/(.*?)\//)[1]} ${posted.year} 年 ${posted.month} 月 ${posted.day} 日发布的 ${ctx.title}[/u][/color][/url]】[/b]
-【本文排版借助了：[url=https://www.mcbbs.net/thread-1266030-1-1.html][color=#388d40][u]SPXX[/u][/color][/url] Userscript v${spxxVersion}】[/indent][/indent]\n\n${footer}`;
+【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXX[/u][/color][/url] Userscript v${spxxVersion}】[/indent][/indent]\n\n${footer}`;
     return ans;
   }
 

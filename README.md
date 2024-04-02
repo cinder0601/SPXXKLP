@@ -14,3 +14,5 @@ SPXXKLP is written by Cinder0601 based on SPXX User Script v2.4.14.
 
 # Related Hyperlinks
 SPXX Project:https://github.com/SPXFellow/spxx
+
+Sincere thanks to SPGoding and [SPXFellow](https://github.com/SPXFellow) for their tremendous contribution on SPXX™️,they ARE eternal newslords.

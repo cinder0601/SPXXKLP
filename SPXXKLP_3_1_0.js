@@ -1327,7 +1327,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
       break;
 
     case 'x.com':
-    case 'moble.x.com':
+    case 'mobile.x.com':
       twitter();
     break;
 

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        SPXXKLP
-// @description Minecraft.net blog article to BBCode converter, rewritten and adapted to KLPBBS
+// @description Minecraft.net & X.com blog article to BBCode converter, adapted to KLPBBS
 // @namespace   npmjs.com/package/@spxxklp/userscript
-// @author      SPGoding & SPX Fellow & Cinder
+// @author      Cinder & SPGoding & SPX Fellow
 // @connect     feedback.minecraft.com
 // @connect     help.minecraft.net
 // @connect     raw.githubusercontent.com
@@ -10,7 +10,7 @@
 // @homepage    https://github.com/cinder0601/SPXXKLP
 // @match       https://www.minecraft.net/en-us/article/*
 // @match       https://www.minecraft.net/zh-hans/article/*
-// @include     https://x.com/*/status/*
+// @match       https://x.com/*/status/*
 // @match       https://feedback.minecraft.net/hc/en-us/articles/*
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
@@ -32,28 +32,28 @@
     title: 'SPXXKLP Userscript',
     fields: {
       translator: {
-        label: 'Translator',
+        label: '译者名',
         type: 'text',
-        default: '<译者名>'
+        default: '<默认译者>'
       },
       bugSource: {
-        label: 'Translation Source',
+        label: '选择翻译源',
         type: 'select',
         options: ['Github', 'Custom'],
         default: 'Github'
       },
       bugCenterTranslation: {
-        label: 'Custom translation source',
+        label: '漏洞翻译源',
         type: 'text',
         default: 'https://raw.githubusercontent.com/SPXFellow/spxx-translation-database/crowdin/zh-CN/zh_CN.json'
       },
       bugCenterTranslator: {
-        label: 'Custom translator source',
+        label: '漏洞译者源',
         type: 'text',
         default: 'https://raw.githubusercontent.com/SPXFellow/spxx-translation-database/master/translator.json'
       },
       bugCenterColor: {
-        label: 'Custom color source',
+        label: '漏洞颜色源',
         type: 'text',
         default: 'https://raw.githubusercontent.com/SPXFellow/spxx-translation-database/master/color.json'
       }
@@ -327,7 +327,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
           return converters.p(node, ctx);
 
         case 'PICTURE':
-          // TODO: If picture contains important img in the future. Then just attain the last <img> element in the <picture> element.
           return converters.picture(node, ctx);
 
         case 'PRE':
@@ -509,8 +508,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       return '';
     },
     dl: async (ele, ctx) => {
-      // The final <dd> after converted will contains an footer comma '，'
-      // So I don't add any comma before '译者'.
       const ans = `\n\n${await converters.recurse(ele, ctx)}\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] v${spxxklpVersion}】\n\n`;
       return ans;
     },
@@ -1193,6 +1190,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
       ['Dinnerbone', 'https://s2.loli.net/2024/05/27/Q4ebCE29vFwPmxn.png'],
       ['Marc_IRL', 'https://s2.loli.net/2024/05/27/bcW5zXfQ84r9IO6.png'],
       ['Mega_Spud', 'https://s2.loli.net/2024/05/27/TZwzsJBRhnLyuFx.png'],
+      ['CornerHardMC', 'https://s2.loli.net/2024/05/28/o4wLCvuRGi9Yxh7.png'],
   ]);//More pictures can be added manually.
   function getTweetMetadata() {
       const tweetMetadata = {
@@ -1265,7 +1263,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
 
       return `[align=center][table=560,${backgroundColor}]
   [tr][td][font=-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif][indent]
-  [float=left][img=44,44]${ProfilePictures.get(tweet.userTag) || '【TODO：头像】'}[/img][/float][size=15px][b][color=${foregroundColor}]${tweet.userName}[/color][/b]
+  [float=left][img=44,44]${ProfilePictures.get(tweet.userTag) || '<不支持的头像，请手动添加图片链接>'}[/img][/float][size=15px][b][color=${foregroundColor}]${tweet.userName}[/color][/b]
 [color=${attributeColor}]@${tweet.userTag}[/color][/size]
 
 [color=Silver][size=23px]${content1}[/color][/size]

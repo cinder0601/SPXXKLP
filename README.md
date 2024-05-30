@@ -1,7 +1,7 @@
 # SPXXKLP
-SPXXKLP is a Minecraft.net blog-to-BBCode converter based on SPXX User Script™️，adapted to klpbbs.com in order to make Minecraft news translation easier.
+SPXXKLP is a Minecraft.net ＆ X.com blog-to-BBCode converter based on SPXX User Script™️，adapted to klpbbs.com in order to make Minecraft news translation easier.
 
-SPXXKLP 是一个基于 SPXX User Script™️ 的 Minecraft.net 博文至 BBCode 转换器，进行了调整以便适应 klpbbs.com 的版块规定，令快讯翻译更便捷。
+SPXXKLP 是一个基于 SPXX User Script™️ 的 Minecraft.net 及 X.com 博文至 BBCode 转换器，进行了调整以便适应 klpbbs.com 的版块规定，令快讯翻译更便捷。
 
 SPXXKLP is licensed under MIT.
 

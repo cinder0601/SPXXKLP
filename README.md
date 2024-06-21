@@ -1,7 +1,7 @@
 # SPXXKLP
 SPXXKLP is a Minecraft.net ＆ X.com blog-to-BBCode converter based on SPXX User Script™️，adapted to klpbbs.com in order to make Minecraft news translation easier.
 
-SPXXKLP 是一个基于 SPXX User Script™️ 的 Minecraft.net 及 X.com 博文至 BBCode 转换器，进行了调整以便适应 klpbbs.com 的版块规定，令快讯翻译更便捷。
+SPXXKLP 是一个基于 SPXX User Script™️ 的 Minecraft.net 、 feedback.minecraft.net 、 help.minecraft net 及 X.com 博文至 BBCode 转换器，进行了一系列修复、完善与调整以便适应 klpbbs.com 的版块规定，令快讯翻译更便捷。
 
 SPXXKLP is licensed under MIT.
 
@@ -21,7 +21,7 @@ SPXX project is licensed under [CC0-1.0](https://creativecommons.org/publicdomai
 SPXX 项目使用 CC0-1.0 协议进行授权。
 
 # Contributers
-SPXXKLP is written by Cinder0601 based on SPXX User Script v2.4.14.
+SPXXKLP is written by Cinder0601 based on SPXX User Script v2.4.14 and SPX.
 
 SPXXKLP 由 Cinder0601 基于 SPXX 用户脚本 v2.4.14 及 SPX 进行改写。
 
@@ -29,7 +29,7 @@ Got help from [Redstone-D](https://github.com/Redstone-D) during development.
 
 在开发中得到了 [Redstone-D](https://github.com/Redstone-D) 的帮助。
 
-# Related Hyperlinks
+# Related
 SPXX Project:https://github.com/SPXFellow/spxx
 
 SPXX 项目地址：https://github.com/SPXFellow/spxx

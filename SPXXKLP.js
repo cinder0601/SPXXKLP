@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.1.5
+// @version     3.1.6
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -88,7 +88,7 @@
     }
   };
 
-  var version = "3.1.5";
+  var version = "3.1.6";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -436,6 +436,8 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
           } else {
             return '';
           }
+        case 'FIGURE':
+          return converters.figure(node, ctx);
 
         default:
           console.warn(`Unknown type: '${node.nodeName}'.`);
@@ -627,9 +629,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       return ans;
     },
     img: async img => {
-      if (img.alt === 'Author image') {
-        return '';
-      }
+      let host = location.host;
 
       let w;
       let h;
@@ -645,14 +645,13 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       }
 
       const prefix = w && h ? `[img=${w},${h}]` : '[img]';
+      console.log(img.src);
       const imgUrl = resolveUrl(img.src);
       if (imgUrl === '') return ''; // in case of empty image
 
       let ans;
-
-      if (img.classList.contains('attributed-quote__image') || img.classList.contains('mr-3')) {
-        // Attributed quote author avatar.
-        ans = `\n[float=left]${prefix}${imgUrl}[/img][/float]`;
+      if (host == 'www.minecraft.net') {
+        ans = `\n\n[/indent][/indent][align=left]${prefix}${imgUrl}[/img][/align][indent][indent]\n`;
       } else {
         ans = `\n\n[/indent][/indent][align=center]${prefix}${imgUrl}[/img][/align][indent][indent]\n`;
       }
@@ -738,6 +737,15 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     },
     picture: async (ele, ctx) => {
       const ans = await converters.recurse(ele, ctx);
+      return ans;
+    },
+    figure: async (ele, ctx) => {
+      console.log("Processing <figure> element:", ele);
+    
+      // 递归处理 figure 内部的所有元素
+      const ans = await converters.recurse(ele, ctx);
+      console.log("Recurse output for <figure> element:", ans);
+    
       return ans;
     },
     pre: async (ele, ctx) => {
@@ -963,14 +971,16 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
   async function minecraftNet() {
     const url = document.location.toString();
-
+  
     if (url.match(/^https:\/\/www\.minecraft\.net\/(?:[a-z-]+)\/article\//)) {
-      const pointerModifier = document.getElementsByClassName('article-attribution-container').item(0);
-      pointerModifier.style.pointerEvents = 'inherit';
+      const authorContainer = document.querySelector('.MC_articleHeroA_attribution_author');
+      const dateElement = authorContainer.querySelector('dd:nth-child(4)'); // 获取发布日期的 dd 元素
+  
+      // 创建按钮
       const button = document.createElement('button');
       button.classList.add('mc-button__primary', 'mc-button__green-s1', 'spxxklp-userscript-ignored');
       button.innerText = '复制 BBCode';
-
+  
       button.onclick = async () => {
         button.innerText = '处理中...';
         const bbcode = await convertMCArticleToBBCode(document, url);
@@ -979,11 +989,11 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
           mimetype: 'text/plain'
         });
         button.innerText = '已复制 BBCode!';
-        setTimeout(() => button.innerText = '复制 BBCode', 5_000);
+        setTimeout(() => button.innerText = '复制 BBCode', 5000);
       };
-
-      const container = document.getElementsByClassName('attribution').item(0);
-      container.append(button);
+  
+      // 将按钮插入到日期下方
+      dateElement.insertAdjacentElement('afterend', button);
     }
   }
 
@@ -1019,6 +1029,8 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
     const header = getHeader(articleType, versionType);
     const heroImage = getHeroImage(html, articleType);
+    const maintitle = await getMainTitle(html);
+    const subtitle = await getSubTitle(html);
     const content = await getContent(html, {
       bugs,
       bugsTranslators,
@@ -1029,7 +1041,8 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       url: articleUrl
     });
     const footer = getFooter(articleType, versionType);
-    const ans = `${header}${heroImage}${content}[/indent][/indent]${footer}`;
+    const author = await getAuthor(html);
+    const ans = `${header}${heroImage}\n[color=silver][size=6][b]${maintitle}[/b][/size][/color]\n[size=6][b]${maintitle}[/b][/size]\n[color=silver][size=2]${subtitle}[/size][/color]\n[size=2]${subtitle}[/size]\n\n${content}[/indent][/indent][b]${author}\n\n${footer}`;
     return ans;
   }
   /**
@@ -1039,7 +1052,8 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
   function getArticleType(html) {
     try {
-      const type = html.getElementsByClassName('article-category__text')?.[0]?.textContent ?? '';
+      const type = html.getElementsByClassName('MC_articleHeroA_category')?.[0]?.textContent ?? '';
+      console.log("ArticleType is ",type);
       return type.toUpperCase();
     } catch (e) {
       console.error('[getArticleType]', e);
@@ -1063,7 +1077,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     }
 
     const src = img.src;
-    const ans = `[align=center][img=1200,513]${resolveUrl(src)}[/img]\n${category}[indent][indent]\n`;
+    const ans = `[align=center][img=1200,513]${resolveUrl(src)}[/img]\n${category}[/align][indent][indent]\n`;
     return ans;
   }
   /**
@@ -1071,37 +1085,44 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
    * @param html An HTML Document.
    */
 
+  async function getSubTitle(html) {
+    let con = html.getElementsByClassName("MC_articleHeroA_header_container")[0];
+    let subtitle = con.getElementsByClassName("MC_articleHeroA_header_subheadline")[0].innerText;
+    return subtitle;
+  }
+  async function getMainTitle(html) {
+    let con = html.getElementsByClassName("MC_articleHeroA_header_container")[0];
+    let maintitle = con.getElementsByClassName("MC_Heading_1")[0].innerText;
+    return maintitle;
+  }  
+
+  async function getAuthor(html, translator = config.translator) {
+    let rawauthor = html.getElementsByClassName("MC_articleHeroA_attribution_author")[0];
+    let authorImgUrl = rawauthor.getElementsByTagName("img")[0].src;
+    let authorName = rawauthor.getElementsByTagName("dd")[0].innerText;
+    let publishDate = rawauthor.getElementsByTagName("dd")[1].innerText;
+    let [year, month, day] = publishDate.split('/');
+    let url = window.location.href;
+    let title = await getMainTitle(html);
+    let ans = `\n[float=left][img]${authorImgUrl}[/img][/float]\n\n\n【${translator} 译自[url=${url}][color=#388d40][u]${authorName} ${year} 年 ${month} 月 ${day} 日发布的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${spxxklpVersion}】`;
+    console.log(ans);
+    return ans;
+  }  
 
   async function getContent(html, ctx) {
-    const rootDiv = html.getElementsByClassName('article-body')[0];
-    let ans = await converters.recurse(rootDiv, ctx); // Get the server URL if it exists.
+    let elements = html.getElementsByClassName("MC_articleGridA_container MC_articleGridA_grid");
+    let results = []; 
 
-    const serverUrls = ans.match(/(https:\/\/piston-data.mojang.com\/.+\/server.jar)/);
-    let serverUrl = '';
-
-    if (serverUrls) {
-      serverUrl = serverUrls[0];
-    } // Remove the text after '】'
-
-
-    ans = ans.slice(0, ans.lastIndexOf('】') + 1); // Remove 'GET THE SNAPSHOT/PRE-RELEASE/RELEASE-CANDIDATE/RELEASE' for releasing
-
-    let index = ans.toLowerCase().search(/\[size=\d]\[b\]\[color=silver\](\[b\])?get the (pre-release|release|release candidate|snapshot)(\[\/b\])?\[\/color\]\[\/b\]\[\/size\]/);
-
-    if (index !== -1) {
-      ans = ans.slice(0, index);
-
-      const attribution = await converters.recurse(document.querySelector('.attribution'), ctx);
-      ans = `${ans}${attribution}`;
-    } // Add spaces between texts and '[x'.
-
-
-    ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2'); // Add spaces between '[/x]' and texts.
-
-    ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2'); // Append the server URL if it exists.
-
-    return ans;
+    for (let i = 0; i < elements.length; i++) {
+        let rootDiv = elements[i];
+        let ans = await converters.recurse(rootDiv, ctx);
+        ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2');
+        ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2'); 
+        results.push(ans);
+    }
+    return results.join("\n\n");
   }
+
 
   function getZendesk(controlDOM, titleSlice, contentClass, versionType) {
     const button = document.createElement('a');
@@ -1440,7 +1461,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
   x();
   }
   switch (location.host) {
-    case 'www.minecraft.net':
+    case 'www.minecraft.net'://Fuck minecraft.net what the heck are you doing.
       minecraftNet();
       break;
 

@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.1.8
+// @version     3.1.9
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -88,7 +88,7 @@
     }
   };
 
-  var version = "3.1.8";
+  var version = "3.1.9";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -661,9 +661,9 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
       let ans;
       if (host == 'www.minecraft.net') {
-        ans = `[align=center]${prefix}${imgUrl}[/img][/align]`;//Left aligning is too ugly.
+        ans = `[align=center]${prefix}${imgUrl}[/img][/align]\n`;//Left aligning is too ugly.
       } else {
-        ans = `[align=center]${prefix}${imgUrl}[/img][/align]`;
+        ans = `[align=center]${prefix}${imgUrl}[/img][/align]\n`;
       }
 
       return ans;
@@ -727,10 +727,12 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
   
       if (inner.trim() === '') {
           return '';
-      }//Why are you fucking adding empty elements into webpage?
-
-      if (ele.classList.contains('lead')) {
-          ans = `[size=4][b][size=2][color=Silver]${inner}[/color][/size][/b][/size]\n[size=4][b]${translate(inner, ctx, 'headings')}[/b][/size]\n\n`;
+      }
+  
+      if (ele.style.textAlign === 'center') {
+          ans = `[align=center][size=2][color=Silver]${usingSilver(inner)}[/color][/size]\n${translate(inner, ctx, ['punctuation', 'imgCredits'])}[/align]\n`;
+      } else if (ele.classList.contains('lead')) {
+          ans = `[size=4][b][size=2][color=Silver]${inner}[/color][/size][/b][/size]\n[size=4][b]${translate(inner, ctx, 'headings')}[/b][/size]\n`;
       } else if (ele.querySelector('strong') !== null && ele.querySelector('strong').textContent === 'Posted:') {
           return '';
       } else if (isBlocklisted(ele.textContent)) {
@@ -989,6 +991,11 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     }).some(block => text.trim().trim().replace(/\p{General_Category=Space_Separator}*/, '').includes(block));
   }
 
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://www.minecraft.net/etc.clientlibs/minecraftnet/clientlibs/clientlib-site/resources/fonts/MinecraftTen.woff';
+  document.head.appendChild(link);
+
   async function minecraftNet() {
     const url = document.location.toString();
   
@@ -996,11 +1003,31 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       const authorContainer = document.querySelector('.MC_articleHeroA_attribution_author');
       const dateElement = authorContainer.querySelector('dd:nth-child(4)'); // 获取发布日期的 dd 元素
   
-      // 创建按钮
       const button = document.createElement('button');
-      button.classList.add('mc-button__primary', 'mc-button__green-s1', 'spxxklp-userscript-ignored');
+      button.classList.add('spxxklp-userscript-ignored');
       button.innerText = '复制 BBCode';
-  
+      // 按钮样式设置
+      button.style.backgroundColor = '#3C8527';
+      button.style.color = '#FFFFFF';
+      button.style.border = 'none';
+      button.style.padding = '10px 20px';
+      button.style.borderRadius = '5px';
+      button.style.fontSize = '16px';
+      button.style.cursor = 'pointer';
+      button.style.transition = 'background-color 0.3s ease';
+      button.style.fontFamily = 'MinecraftTen, sans-serif';
+
+      button.style.width = '140px';
+      button.style.height = '45px';
+      button.style.textAlign = 'center';
+      button.style.marginLeft = 'auto';
+
+      button.onmouseover = () => {
+        button.style.backgroundColor = '#52A535';
+      };
+      button.onmouseout = () => {
+        button.style.backgroundColor = '#3C8527';
+      };
       button.onclick = async () => {
         button.innerText = '处理中...';
         const bbcode = await convertMCArticleToBBCode(document, url);
@@ -1008,10 +1035,18 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
           type: 'text',
           mimetype: 'text/plain'
         });
-        button.innerText = '已复制 BBCode!';
+        button.innerText = '已复制!';
         setTimeout(() => button.innerText = '复制 BBCode', 5000);
       };
-  
+      const container = document.createElement('div');
+      container.id = 'spxxklp-buttons';
+      container.style.display = 'flex';
+      container.style.flexDirection = 'column';
+      container.style.alignItems = 'flex-end';
+      container.style.width = '100%';
+      container.style.padding = '10px';
+      container.style.boxSizing = 'border-box';
+      container.append(button);
       // 将按钮插入到日期下方
       dateElement.insertAdjacentElement('afterend', button);
     }
@@ -1127,22 +1162,35 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     let ans = `\n[float=left][img]${authorImgUrl}[/img][/float]\n\n\n【${translator} 译自[url=${url}][color=#388d40][u]${authorName} ${year} 年 ${month} 月 ${day} 日发布的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${spxxklpVersion}】`;
     console.log(ans);
     return ans;
-  }  
-
-  async function getContent(html, ctx) {
-    let elements = html.getElementsByClassName("MC_articleGridA_container MC_articleGridA_grid");
-    let results = []; 
-
-    for (let i = 0; i < elements.length; i++) {
-        let rootDiv = elements[i];
-        let ans = await converters.recurse(rootDiv, ctx);
-        ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2');
-        ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2'); 
-        results.push(ans);
-    }
-    return results.join("\n\n");
   }
 
+  async function getContent(html, ctx) {
+    let results = [];
+    let elements = document.querySelectorAll('.MC_articleGridA_container.MC_articleGridA_grid, .MC_Carousel_track_slide.MC_Theme_Vanilla.MC_Carousel_track_slide__active, .MC_Carousel_track_slide.MC_Theme_Vanilla:not(.MC_Carousel_track_slide__copy)');
+    let container = document.createElement('div');
+
+    let seenElements = new Set();
+
+    Array.from(elements).forEach(element => {
+        let identifier = element.outerHTML;
+        if (!seenElements.has(identifier)) {
+            seenElements.add(identifier);
+            container.appendChild(element.cloneNode(true)); // cloneNode(true) 深拷贝元素
+        }
+    });
+
+    let containerElements = Array.from(container.children);
+
+    for (let i = 0; i < containerElements.length; i++) {
+        let rootDiv = containerElements[i];
+        let ans = await converters.recurse(rootDiv, ctx);
+        ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2');
+        ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2');
+        results.push(ans);
+    }
+
+    return results.join("\n\n");
+  }
 
   function getZendesk(controlDOM, titleSlice, contentClass, versionType) {
     const button = document.createElement('a');
@@ -1156,7 +1204,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
         type: 'text',
         mimetype: 'text/plain'
       });
-      button.innerText = '已复制 BBCode!';
+      button.innerText = '已复制!';
       setTimeout(() => button.innerText = '复制 BBCode', 5_000);
     };
 
@@ -1218,7 +1266,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
             type: 'text',
             mimetype: 'text/plain'
         });
-        button.innerText = '已复制 BBCode!';
+        button.innerText = '已复制!';
         setTimeout(() => button.innerText = '复制 BBCode', 5000);
     };
 
@@ -1423,7 +1471,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
           try {
               const bbcode = getTweetBbcode(getTweetMetadata(), 'light');
               GM_setClipboard(bbcode, { type: 'text', mimetype: 'text/plain' });
-              buttonLight.innerText = '已复制 BBCode!';
+              buttonLight.innerText = '已复制!';
           } catch (error) {
               console.error("Error processing BBCode (Light):", error);
               buttonLight.innerText = '错误!';
@@ -1439,7 +1487,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
           try {
               const bbcode = getTweetBbcode(getTweetMetadata(), 'dark');
               GM_setClipboard(bbcode, { type: 'text', mimetype: 'text/plain' });
-              buttonDark.innerText = '已复制 BBCode!';
+              buttonDark.innerText = '已复制!';
           } catch (error) {
               console.error("Error processing BBCode (Dark):", error);
               buttonDark.innerText = '错误!';

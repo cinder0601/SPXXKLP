@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.1.7
+// @version     3.1.8
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -88,7 +88,7 @@
     }
   };
 
-  var version = "3.1.7";
+  var version = "3.1.8";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -661,7 +661,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
       let ans;
       if (host == 'www.minecraft.net') {
-        ans = `\n\n[/indent][/indent][align=left]${prefix}${imgUrl}[/img][/align][indent][indent]\n`;
+        ans = `\n\n[/indent][/indent][align=center]${prefix}${imgUrl}[/img][/align][indent][indent]\n`;//Left aligning is too ugly.
       } else {
         ans = `\n\n[/indent][/indent][align=center]${prefix}${imgUrl}[/img][/align][indent][indent]\n`;
       }
@@ -767,7 +767,13 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     span: async (ele, ctx) => {
       const ans = await converters.recurse(ele, ctx);
 
-      if (ele.classList.contains('bedrock-server')) {
+      if (ele.classList.contains('MC_Effect_TextHighlightA')) {
+        // Special for MC_Effect_TextHighlightA element.
+        const textContent = await converters.recurse(ele, ctx);
+        const prefix = '[backcolor=#f1edec][color=#7824c5][font=SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace]';
+        const suffix = '[/font][/color][/backcolor]';
+        return `${prefix}${textContent}${suffix}`;
+      } else if (ele.classList.contains('bedrock-server')) {
         // Inline code.
         const prefix = '[backcolor=#f1edec][color=#7824c5][font=SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace]';
         const suffix = '[/font][/color][/backcolor]';
@@ -1052,7 +1058,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     });
     const footer = getFooter(articleType, versionType);
     const author = await getAuthor(html);
-    const ans = `${header}${heroImage}\n[color=silver][size=6][b]${maintitle}[/b][/size][/color]\n[size=6][b]${maintitle}[/b][/size]\n[color=silver][size=2]${subtitle}[/size][/color]\n[size=2]${subtitle}[/size]\n\n${content}[/indent][/indent][b]${author}\n\n${footer}`;
+    const ans = `${header}${heroImage}\n[align=center][color=silver][size=6][b]${maintitle}[/b][/size][/color][/align][align=center][size=6][b]${maintitle}[/b][/size][/align]\n[align=center][color=silver][size=2]${subtitle}[/size][/color][/align][align=center][size=2]${subtitle}[/size][/align]\n\n${content}[/indent][/indent][b]${author}\n\n${footer}`;
     return ans;
   }
   /**

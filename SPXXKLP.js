@@ -509,7 +509,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       let ans = await converters.recurse(ele, ctx);
 
       if (ele.classList.contains('text-center')) {
-        ans = `[/indent][/indent][align=center]${ans}[/align][indent][indent]\n`;
+        ans = `[align=center]${ans}[/align]\n`;
       } else if (ele.classList.contains('article-image-carousel')) {
 
         /*const prefix = `[/indent][/indent][album]\n`;
@@ -541,13 +541,13 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
         /*if (shouldUseAlbum(slides)) {
           ans = `${prefix}${slides.map(([url, caption]) => `[aimg=${url}]${caption}[/aimg]`).join('\n')}${suffix}`;
         } else */if (slides.length > 0) {
-          ans = `[/indent][/indent][align=center]${slides.map(([url, caption]) => `[img]${url}[/img]\n${caption}`).join('\n')}[/align][indent][indent]\n`;
+          ans = `[align=center]${slides.map(([url, caption]) => `[img]${url}[/img]\n${caption}`).join('\n')}[/align]\n`;
         } else {
           ans = '';
         }
       } else if (ele.classList.contains('video')) {
         // Video.
-        ans = '\n[/indent][/indent][align=center]<无法获取的视频，如有可用视频源，请在此处插入>\n<对于B站视频，可使用 [bilibili] 代码>[/align][indent][indent]\n';
+        ans = '\n[align=center]<无法获取的视频，如有可用视频源，请在此处插入>\n<对于B站视频，可使用 [bilibili] 代码>[/align]\n';
       } else if (ele.classList.contains('quote') || ele.classList.contains('attributed-quote')) {
         ans = `\n[quote]\n${ans}\n[/quote]\n`;
       } else if (ele.classList.contains('article-social')) {
@@ -661,9 +661,9 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
       let ans;
       if (host == 'www.minecraft.net') {
-        ans = `\n\n[/indent][/indent][align=center]${prefix}${imgUrl}[/img][/align][indent][indent]\n`;//Left aligning is too ugly.
+        ans = `[align=center]${prefix}${imgUrl}[/img][/align]`;//Left aligning is too ugly.
       } else {
-        ans = `\n\n[/indent][/indent][align=center]${prefix}${imgUrl}[/img][/align][indent][indent]\n`;
+        ans = `[align=center]${prefix}${imgUrl}[/img][/align]`;
       }
 
       return ans;
@@ -724,27 +724,31 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     p: async (ele, ctx) => {
       const inner = await converters.recurse(ele, ctx);
       let ans;
+  
+      if (inner.trim() === '') {
+          return '';
+      }//Why are you fucking adding empty elements into webpage?
 
       if (ele.classList.contains('lead')) {
-        ans = `[size=4][b][size=2][color=Silver]${inner}[/color][/size][/b][/size]\n[size=4][b]${translate(inner, ctx, 'headings')}[/b][/size]\n\n`;
+          ans = `[size=4][b][size=2][color=Silver]${inner}[/color][/size][/b][/size]\n[size=4][b]${translate(inner, ctx, 'headings')}[/b][/size]\n\n`;
       } else if (ele.querySelector('strong') !== null && ele.querySelector('strong').textContent === 'Posted:') {
-        return '';
+          return '';
       } else if (isBlocklisted(ele.textContent)) {
-        return '';
-      } else if (ele.innerHTML === '&nbsp;') {
-        return '\n';
+          return '';
+      } else if (ele.innerHTML.trim() === '&nbsp;') {
+          return '';
       } else if (/\s{0,}/.test(ele.textContent) && ele.querySelectorAll('img').length === 1) {
-        return inner;
+          return inner;
       } else {
-        if (ctx.inList) {
-          ans = inner;
-        } else {
-          ans = `[size=2][color=Silver]${usingSilver(inner)}[/color][/size]\n${translate(inner, ctx, ['punctuation', 'imgCredits'])}\n\n`;
-        }
+          if (ctx.inList) {
+              ans = inner;
+          } else {
+              ans = `[size=2][color=Silver]${usingSilver(inner)}[/color][/size]\n${translate(inner, ctx, ['punctuation', 'imgCredits'])}\n\n`;
+          }
       }
-
+  
       return ans;
-    },
+    },  
     picture: async (ele, ctx) => {
       const ans = await converters.recurse(ele, ctx);
       return ans;
@@ -1058,7 +1062,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     });
     const footer = getFooter(articleType, versionType);
     const author = await getAuthor(html);
-    const ans = `${header}${heroImage}\n[align=center][color=silver][size=6][b]${maintitle}[/b][/size][/color][/align][align=center][size=6][b]${maintitle}[/b][/size][/align]\n[align=center][color=silver][size=2]${subtitle}[/size][/color][/align][align=center][size=2]${subtitle}[/size][/align]\n\n${content}[/indent][/indent][b]${author}\n\n${footer}`;
+    const ans = `${header}${heroImage}\n[align=center][color=silver][size=6][b]${maintitle}[/b][/size][/color][/align][align=center][size=6][b]${maintitle}[/b][/size][/align]\n[align=center][color=silver][size=2]${subtitle}[/size][/color][/align][align=center][size=2]${subtitle}[/size][/align]\n\n${content}[b]${author}\n\n${footer}`;
     return ans;
   }
   /**

@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.1.6
+// @version     3.1.7
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -88,7 +88,7 @@
     }
   };
 
-  var version = "3.1.6";
+  var version = "3.1.7";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -426,8 +426,10 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
             return '';
           }
 
-        case 'BUTTON':
         case 'H5':
+          return converters.h5(node, ctx);
+        
+        case 'BUTTON':
         case 'NAV':
         case 'svg':
         case 'SCRIPT':
@@ -618,6 +620,14 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     },
     h4: async (ele, ctx) => {
       const prefix = '[size=3][b]';
+      const suffix = '[/b][/size]';
+      const rawInner = await converters.recurse(ele, ctx);
+      const inner = makeUppercaseHeader(rawInner);
+      const ans = `\n${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${translate(`${inner}`, ctx, ['headings', 'punctuation']).replace(/[\n\r]+/g, ' ')}${suffix}\n\n`;
+      return ans;
+    },
+    h5: async (ele, ctx) => {
+      const prefix = '[size=2][b]';
       const suffix = '[/b][/size]';
       const rawInner = await converters.recurse(ele, ctx);
       const inner = makeUppercaseHeader(rawInner);

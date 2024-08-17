@@ -784,6 +784,12 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
         const prefix = '[backcolor=#f1edec][color=#7824c5][font=SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace]';
         const suffix = '[/font][/color][/backcolor]';
         return `${prefix}${textContent}${suffix}`;
+      } else if (ele.classList.contains('MC_Effect_TextHighlightB')) {
+        // Special for MC_Effect_TextHighlightB element.
+        const textContent = await converters.recurse(ele, ctx);
+        const prefix = '[backcolor=#f1edec][color=#7824c5][font=SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace]';
+        const suffix = '[/font][/color][/backcolor]';
+        return `${prefix}${textContent}${suffix}`;
       } else if (ele.classList.contains('bedrock-server')) {
         // Inline code.
         const prefix = '[backcolor=#f1edec][color=#7824c5][font=SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace]';

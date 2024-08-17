@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.1.9
+// @version     3.2.0
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -23,7 +23,7 @@
 // @grant       GM_registerMenuCommand
 // @license     MIT
 // @downloadURL https://update.greasyfork.org/scripts/491477/SPXXKLP.user.js
-// @updateURL https://update.greasyfork.org/scripts/491477/SPXXKLP.meta.js
+// @updateURL   https://update.greasyfork.org/scripts/491477/SPXXKLP.meta.js
 // ==/UserScript==
 (function () {
   'use strict';
@@ -88,7 +88,7 @@
     }
   };
 
-  var version = "3.1.9";
+  var version = "3.2.0";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -159,6 +159,11 @@
     }
   }
 
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://www.minecraft.net/etc.clientlibs/minecraftnet/clientlibs/clientlib-site/resources/fonts/MinecraftTen.woff';
+  document.head.appendChild(link);
+
   let versioncode = getVersionCode(url1);
   function getHeader(articleType, type) {
     if (articleType.toLowerCase() !== 'news') {
@@ -226,26 +231,26 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
     switch (type) {
       case VersionType.Snapshot:
-        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list][/indent]`;
+        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.PreRelease:
-        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list][/indent]`;
+        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.ReleaseCandidate:
-        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list][/indent]`;
+        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.Release:
-        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list][/indent]`;
+        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.BedrockRelease:
-        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list][/indent]`;
+        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.BedrockBeta:
-        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list][/indent]`;
+        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.Normal:
       default:
-        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list][/indent]`;
+        return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
     }
   }
   let VersionType;
@@ -991,11 +996,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     }).some(block => text.trim().trim().replace(/\p{General_Category=Space_Separator}*/, '').includes(block));
   }
 
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://www.minecraft.net/etc.clientlibs/minecraftnet/clientlibs/clientlib-site/resources/fonts/MinecraftTen.woff';
-  document.head.appendChild(link);
-
   async function minecraftNet() {
     const url = document.location.toString();
   
@@ -1128,11 +1128,11 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const img = html.getElementsByClassName('article-head__image')[0];
 
     if (!img) {
-      return `\n[align=center]${category}[indent][indent]\n`;
+      return `\n[align=center]${category}\n`;
     }
 
     const src = img.src;
-    const ans = `[align=center][img=1200,513]${resolveUrl(src)}[/img]\n${category}[/align][indent][indent]\n`;
+    const ans = `[align=center][img=1200,513]${resolveUrl(src)}[/img]\n${category}[/align]\n`;
     return ans;
   }
   /**
@@ -1194,9 +1194,29 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
   function getZendesk(controlDOM, titleSlice, contentClass, versionType) {
     const button = document.createElement('a');
-    button.classList.add('navLink');
+    button.classList.add('spxxklp-userscript-ignored', 'navLink');
     button.innerText = '复制 BBCode';
+    // 按钮样式设置
+    button.style.backgroundColor = '#3C8527';
+    button.style.color = '#FFFFFF';
+    button.style.border = 'none';
+    button.style.padding = '5px 10px';
+    button.style.borderRadius = '5px';
+    button.style.fontSize = '15px';
+    button.style.cursor = 'pointer';
+    button.style.transition = 'background-color 0.3s ease';
 
+    button.style.width = '120px';
+    button.style.height = '30px';
+    button.style.textAlign = 'center';
+    button.style.marginLeft = 'auto';
+
+    button.onmouseover = () => {
+      button.style.backgroundColor = '#52A535';
+    };
+    button.onmouseout = () => {
+      button.style.backgroundColor = '#3C8527';
+    };
     button.onclick = async () => {
       button.innerText = '处理中...';
       const bbcode = await convertZendeskArticleToBBCode(document, location.href, config.translator, titleSlice, contentClass, versionType);
@@ -1207,6 +1227,15 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       button.innerText = '已复制!';
       setTimeout(() => button.innerText = '复制 BBCode', 5_000);
     };
+    const container = document.createElement('div');
+    container.id = 'spxxklp-buttons';
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.alignItems = 'flex-end';
+    container.style.width = '100%';
+    container.style.padding = '10px';
+    container.style.boxSizing = 'border-box';
+    container.append(button);
 
     controlDOM(button);
   }
@@ -1250,25 +1279,54 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const content = document.getElementsByClassName('article-page-body');
 
     const button = document.createElement('a');
-    button.classList.add('navLink');
+    button.classList.add('spxxklp-userscript-ignored', 'navLink');
     button.innerText = '复制 BBCode';
+    // 按钮样式设置
+    button.style.backgroundColor = '#3C8527';
+    button.style.color = '#FFFFFF';
+    button.style.border = 'none';
+    button.style.padding = '5px 10px';
+    button.style.borderRadius = '5px';
+    button.style.fontSize = '15px';
+    button.style.cursor = 'pointer';
+    button.style.transition = 'background-color 0.3s ease';
 
-    button.onclick = async () => {
-        button.innerText = '处理中...';
-        let bbcode = await converthelpElementsToBBCode(heading, ctx);
-        let title = bbcode;
-        title = title.replace(/\n/g, '');
-        bbcode = `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n[size=6][b][color=silver]${bbcode}[/color][/b][/size][size=6][b]${bbcode}[/b][/size]\n`
-        bbcode += await converthelpElementsToBBCode(content, ctx);
-        bbcode += `[b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u] help.minecraft.net 上的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${version}】\n`;
-        bbcode += getFooter('INSIDER',VersionType.Normal);
-        GM_setClipboard(bbcode, {
-            type: 'text',
-            mimetype: 'text/plain'
-        });
-        button.innerText = '已复制!';
-        setTimeout(() => button.innerText = '复制 BBCode', 5000);
+    button.style.width = '120px';
+    button.style.height = '30px';
+    button.style.textAlign = 'center';
+    button.style.marginLeft = 'auto';
+
+    button.onmouseover = () => {
+      button.style.backgroundColor = '#52A535';
     };
+    button.onmouseout = () => {
+      button.style.backgroundColor = '#3C8527';
+    };
+    button.onclick = async () => {
+      button.innerText = '处理中...';
+      let bbcode = await converthelpElementsToBBCode(heading, ctx);
+      let title = bbcode;
+      title = title.replace(/\n/g, '');
+      bbcode = `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n[size=6][b][color=silver]${bbcode}[/color][/b][/size][size=6][b]${bbcode}[/b][/size]\n`
+      bbcode += await converthelpElementsToBBCode(content, ctx);
+      bbcode += `[b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u] help.minecraft.net 上的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${version}】\n`;
+      bbcode += getFooter('INSIDER',VersionType.Normal);
+      GM_setClipboard(bbcode, {
+          type: 'text',
+          mimetype: 'text/plain'
+      });
+      button.innerText = '已复制!';
+      setTimeout(() => button.innerText = '复制 BBCode', 5000);
+  };
+    const container = document.createElement('div');
+    container.id = 'spxxklp-buttons';
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.alignItems = 'flex-end';
+    container.style.width = '100%';
+    container.style.padding = '10px';
+    container.style.boxSizing = 'border-box';
+    container.append(button);
 
     controlDOM(button);
   }
@@ -1288,9 +1346,9 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const header = versionType ? getHeader('news', versionType) : '';
     const footer = versionType ? getFooter('news', versionType) : '';
     const ans = `${header}[align=center][size=6][b][color=Silver]${title}[/color][/b][/size]
-${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[indent][indent]${content}\n
+${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${content}\n
 [b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u]${ctx.url.match(/https:\/\/(.*?)\//)[1]} ${posted.year} 年 ${posted.month} 月 ${posted.day} 日发布的 ${ctx.title}[/u][/color][/url]】[/b]
-【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${spxxklpVersion}】[/indent][/indent]\n\n${footer}`;
+【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${spxxklpVersion}】\n\n${footer}`;
     return ans;
   }
 
@@ -1404,28 +1462,47 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
       tweetMetadata.userName = posterNameContent.join('');
       let texts = [];
       let rawTexts = [];
-      const articleDivs = document.querySelector('article div[lang]').querySelectorAll('span, img[alt]');
+      
+      const articleDivs = document.querySelector('article div[lang]').querySelectorAll('a, span, img[alt]');
+
       for (const element of articleDivs) {
         let textContent = '';
         let rawContent = '';
-        if (element.tagName.toLowerCase() === 'span') {
-          textContent = element.innerHTML;
-          rawContent = element.textContent;
-          const links = element.querySelectorAll('a');
-          links.forEach(link => {
-            const url = link.href;
-            const linkText = link.innerText.trim();
-            const replacement = `[url=${url}][color=#00bfff][u]${linkText}[/u][/color][/url]`;
-            textContent = textContent.replace(link.outerHTML, replacement);
-            rawContent = rawContent.replace(link.outerHTML, linkText);
-          });
+    
+        if (element.tagName.toLowerCase() === 'a') {
+            const url = element.href;
+            console.log("1链接是", url);
+            let linkText = element.textContent.trim();  // 直接使用 a 标签的文本内容
+            console.log("1链接文本是", linkText);
+    
+            // 如果 a 标签中包含 span，并且 span 有前缀内容，剥离掉前缀
+            const span = element.querySelector('span');
+            if (span) {
+                let spanContent = span.textContent.trim();
+                linkText = linkText.replace(spanContent, '').trim();  // 移除 span 的前缀部分
+                console.log("2链接文本是", linkText);
+            }
+    
+            // 转换为 BBCode
+            textContent = `[url=${url}][color=#00bfff][u]${linkText}[/u][/color][/url]`;
+            rawContent = linkText;
+    
+        } else if (element.tagName.toLowerCase() === 'span') {
+            if (!element.closest('a') && element.querySelectorAll('a').length === 0) {
+              textContent = element.innerHTML;
+              rawContent = element.textContent;
+            }
         } else if (element.tagName.toLowerCase() === 'img' && element.alt) {
-          textContent = element.alt;
-          rawContent = element.alt;
+            textContent = element.alt;
+            rawContent = element.alt;
         }
-        texts.push(textContent);
-        rawTexts.push(rawContent.replace(/<a.*?>(.*?)<\/a>/g, '$1'));
-      }
+    
+        // 确保 textContent 不为空再加入 texts
+        if (textContent.trim()) {
+            texts.push(textContent);
+            rawTexts.push(rawContent.replace(/<a.*?>(.*?)<\/a>/g, '$1'));
+        }
+      }             
       tweetMetadata.text = texts.join('');
       tweetMetadata.rawtext = rawTexts.join('');
       //I have tried my best but failed, if it still returns 'http://' or 'https://', please add the link manually.
@@ -1446,8 +1523,8 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
       const content1 = tweet.rawtext;
 
       return `[align=center][table=560,${backgroundColor}]
-  [tr][td][indent]
-  [img=44,44]${ProfilePictures.get(tweet.userTag) || '<不支持的头像，请手动添加图片链接>'}[/img][/float][size=15px][b][color=${foregroundColor}]${tweet.userName}[/color][/b]
+[tr][td][indent][font=-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif]
+  [float=left][img=44,44]${ProfilePictures.get(tweet.userTag) || '<不支持的头像，请手动添加图片链接>'}[/img][/float][size=15px][b][color=${foregroundColor}]${tweet.userName}[/color][/b]
 [color=${attributeColor}]@${tweet.userTag}[/color][/size]
 
 [color=Silver][size=23px]${content1}[/color][/size]
@@ -1464,8 +1541,26 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
       console.info('[SPXXKLP] Activated');
 
       const buttonLight = document.createElement('button');
+      buttonLight.style.backgroundColor = 'rgb(255, 255, 255)';
+      buttonLight.style.color = '#000000';
+      buttonLight.style.border = 'none';
+      buttonLight.style.padding = '5px 10px';
+      buttonLight.style.borderRadius = '5px';
+      buttonLight.style.fontSize = '15px';
+      buttonLight.style.cursor = 'pointer';
+      buttonLight.style.transition = 'background-color 0.3s ease';
+      buttonLight.style.width = '180px';
+      buttonLight.style.height = '30px';
+      buttonLight.style.textAlign = 'center';
+      buttonLight.style.marginLeft = 'auto';
+      
+      buttonLight.onmouseover = () => {
+        buttonLight.style.backgroundColor = 'rgb(223, 223, 223)';
+      };
+      buttonLight.onmouseout = () => {
+        buttonLight.style.backgroundColor = 'rgb(255, 255, 255)';
+      };
       buttonLight.innerText = '复制 BBCode (浅色)';
-      buttonLight.style.width = '100%';
       buttonLight.onclick = async () => {
           buttonLight.innerText = '处理中...';
           try {
@@ -1480,8 +1575,26 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
       };
 
       const buttonDark = document.createElement('button');
+      buttonDark.style.backgroundColor = 'rgb(32, 32, 32)';
+      buttonDark.style.color = '#FFFFFF';
+      buttonDark.style.border = 'none';
+      buttonDark.style.padding = '5px 10px';
+      buttonDark.style.borderRadius = '5px';
+      buttonDark.style.fontSize = '15px';
+      buttonDark.style.cursor = 'pointer';
+      buttonDark.style.transition = 'background-color 0.3s ease';
+      buttonDark.style.width = '180px';
+      buttonDark.style.height = '30px';
+      buttonDark.style.textAlign = 'center';
+      buttonDark.style.marginLeft = 'auto';
+      
+      buttonDark.onmouseover = () => {
+        buttonDark.style.backgroundColor = 'rgb(42, 42, 42)';
+      };
+      buttonDark.onmouseout = () => {
+        buttonDark.style.backgroundColor = 'rgb(32, 32, 32)';
+      };
       buttonDark.innerText = '复制 BBCode (深色)';
-      buttonDark.style.width = '100%';
       buttonDark.onclick = async () => {
           buttonDark.innerText = '处理中...';
           try {
@@ -1498,30 +1611,18 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n[inde
       const checkLoaded = setInterval(() => {
           const targetDiv = document.querySelector('article div[lang]');
           if (targetDiv && !document.querySelector('#spxxklp-buttons')) {
-              const container = document.createElement('div');
-              container.id = 'spxxklp-buttons';
-              container.style.display = 'flex';
-              container.style.flexDirection = 'column';
-              container.style.width = '100%';
-              container.style.justifyContent = 'flex-end';
-              buttonLight.style.backgroundColor = 'rgb(29, 155, 240)';
-              buttonDark.style.backgroundColor = 'rgb(29, 155, 240)';
-              buttonLight.style.borderColor = 'rgba(100, 149, 237, 0.5)';
-              buttonDark.style.borderColor = 'rgba(100, 149, 237, 0.5)';
-              buttonLight.style.borderRadius = '10px';
-              buttonDark.style.borderRadius = '10px';
-              buttonLight.style.textAlign = 'center';
-              buttonDark.style.textAlign = 'center';
-              buttonLight.style.marginLeft = 'auto';
-              buttonDark.style.marginLeft = 'auto';
-              buttonLight.style.width = '180px';
-              buttonLight.style.height = '25px';
-              buttonDark.style.width = '180px';
-              buttonDark.style.height = '25px';
-              container.append(buttonLight);
-              container.append(buttonDark);
-              targetDiv.parentElement.append(container);
-              clearInterval(checkLoaded);
+            const container = document.createElement('div');
+            container.id = 'spxxklp-buttons';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.alignItems = 'flex-end';
+            container.style.width = '100%';
+            container.style.padding = '10px';
+            container.style.boxSizing = 'border-box';
+            container.append(buttonLight);
+            container.append(buttonDark);
+            targetDiv.parentElement.append(container);
+            clearInterval(checkLoaded);
           }
       }, 300);
   }

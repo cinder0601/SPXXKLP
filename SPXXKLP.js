@@ -124,7 +124,7 @@
         return match[1];
       }
     } else if (lowerUrl.includes('minecraft-beta-preview')) {
-      const versionRegex = /\-beta-preview\-(\d+)\-(\d+)\-(\d+)\-(\d+)/;
+      const versionRegex = /-beta-preview-(\d+)-(\d+)-(\d+)-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -135,7 +135,7 @@
         return formattedVersion;
       }
     } else if (lowerUrl.includes('minecraft-preview') && !lowerUrl.includes('beta')) {
-      const versionRegex = /\-preview\-(\d+)\-(\d+)\-(\d+)\-(\d+)/;
+      const versionRegex = /-preview-(\d+)-(\d+)-(\d+)-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -146,7 +146,7 @@
         return formattedVersion;
       }
     } else if (lowerUrl.includes('minecraft-beta') && !lowerUrl.includes('preview')) {
-      const versionRegex = /\-beta\-(\d+)\-(\d+)\-(\d+)\-(\d+)/;
+      const versionRegex = /-beta-(\d+)-(\d+)-(\d+)-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -278,7 +278,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       [/Image credit:/gi, '图片来源：'], [/CC BY-NC-ND/gi, '知识共享 署名-非商业性使用-禁止演绎'], [/CC BY-NC-SA/gi, '知识共享 署名-非商业性使用-相同方式共享'], [/CC BY-NC/gi, '知识共享 署名-非商业性使用'], [/CC BY-ND/gi, '知识共享 署名-禁止演绎'], [/CC BY-SA/gi, '知识共享 署名-相同方式共享'], [/CC BY/gi, '知识共享 署名'], [/Public Domain/gi, '公有领域']]);
     },
     punctuation: (input, ctx) => {
-      return translator(input, ctx, [[/\[i\]/gi, '[font=楷体]'], [/\[\/i\]/g, '[/font]'], ...(ctx.disablePunctuationConverter ? [] : [[/,( |$)/g, '，'], [/!( |$)/g, '！'], [/\.\.\.( |$)/g, '…'], [/\.( |$)/g, '。'], [/\?( |$)/g, '？'], [/( |^)-( |$)/g, ' —— ']])], input => {
+      return translator(input, ctx, [[/\[i]/gi, '[font=楷体]'], [/\[\/i]/g, '[/font]'], ...(ctx.disablePunctuationConverter ? [] : [[/,( |$)/g, '，'], [/!( |$)/g, '！'], [/\.\.\.( |$)/g, '…'], [/\.( |$)/g, '。'], [/\?( |$)/g, '？'], [/( |^)-( |$)/g, ' —— ']])], input => {
         return quoteTreatment(input, [['“', '”', /"/]]);
       });
     },
@@ -433,7 +433,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
         case 'H5':
           return converters.h5(node, ctx);
-        
+
         case 'BUTTON':
         case 'NAV':
         case 'svg':
@@ -729,11 +729,11 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     p: async (ele, ctx) => {
       const inner = await converters.recurse(ele, ctx);
       let ans;
-  
+
       if (inner.trim() === '') {
           return '';
       }
-  
+
       if (ele.style.textAlign === 'center') {
           ans = `[align=center][size=2][color=Silver]${usingSilver(inner)}[/color][/size]\n${translate(inner, ctx, ['punctuation', 'imgCredits'])}[/align]\n`;
       } else if (ele.classList.contains('lead')) {
@@ -753,20 +753,20 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
               ans = `[size=2][color=Silver]${usingSilver(inner)}[/color][/size]\n${translate(inner, ctx, ['punctuation', 'imgCredits'])}\n\n`;
           }
       }
-  
+
       return ans;
-    },  
+    },
     picture: async (ele, ctx) => {
       const ans = await converters.recurse(ele, ctx);
       return ans;
     },
     figure: async (ele, ctx) => {
       console.log("Processing <figure> element:", ele);
-    
+
       // 递归处理 figure 内部的所有元素
       const ans = await converters.recurse(ele, ctx);
       console.log("Recurse output for <figure> element:", ans);
-    
+
       return ans;
     },
     pre: async (ele, ctx) => {
@@ -884,7 +884,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
   }
   /**
    * Get bugs from BugCenter.
-   * Guangyao and github source are down, so I deleted them.
+   * Guangyao and GitHub source are down, so I deleted them.
    */
 
   async function getBugs() {
@@ -1004,11 +1004,11 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
   async function minecraftNet() {
     const url = document.location.toString();
-  
+
     if (url.match(/^https:\/\/www\.minecraft\.net\/(?:[a-z-]+)\/article\//)) {
       const authorContainer = document.querySelector('.MC_articleHeroA_attribution_author');
       const dateElement = authorContainer.querySelector('dd:nth-child(4)'); // 获取发布日期的 dd 元素
-  
+
       const button = document.createElement('button');
       button.classList.add('spxxklp-userscript-ignored');
       button.innerText = '复制 BBCode';
@@ -1155,7 +1155,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     let con = html.getElementsByClassName("MC_articleHeroA_header_container")[0];
     let maintitle = con.getElementsByClassName("MC_Heading_1")[0].innerText;
     return maintitle;
-  }  
+  }
 
   async function getAuthor(html, translator = config.translator) {
     let rawauthor = html.getElementsByClassName("MC_articleHeroA_attribution_author")[0];
@@ -1191,7 +1191,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
         let rootDiv = containerElements[i];
         let ans = await converters.recurse(rootDiv, ctx);
         ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2');
-        ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2');
+        ans = ans.replace(/(\[\/[^\]]+?])([a-zA-Z0-9\-._])/g, '$1 $2');
         results.push(ans);
     }
 
@@ -1253,10 +1253,10 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     for (let element of elements) {
         try {
             let converted = await converters.recurse(element, ctx);
-            let imgTags = converted.match(/\[img\](.*?)\[\/img\]/g);
+            let imgTags = converted.match(/\[img](.*?)\[\/img]/g);
             if (imgTags) {
                 for (let imgTag of imgTags) {
-                    let imgUrl = imgTag.match(/\[img\](.*?)\[\/img\]/)[1];
+                    let imgUrl = imgTag.match(/\[img](.*?)\[\/img]/)[1];
                     if (seenImages.has(imgUrl)) {
                         converted = converted.replace(imgTag, '');
                     } else {
@@ -1365,7 +1365,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 
     ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2'); // Add spaces between '[/x]' and texts.
 
-    ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2');
+    ans = ans.replace(/(\[\/[^\]]+?])([a-zA-Z0-9\-._])/g, '$1 $2');
     return ans;
   }
 
@@ -1468,19 +1468,19 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
       tweetMetadata.userName = posterNameContent.join('');
       let texts = [];
       let rawTexts = [];
-      
+
       const articleDivs = document.querySelector('article div[lang]').querySelectorAll('a, span, img[alt]');
 
       for (const element of articleDivs) {
         let textContent = '';
         let rawContent = '';
-    
+
         if (element.tagName.toLowerCase() === 'a') {
             const url = element.href;
             console.log("1链接是", url);
             let linkText = element.textContent.trim();  // 直接使用 a 标签的文本内容
             console.log("1链接文本是", linkText);
-    
+
             // 如果 a 标签中包含 span，并且 span 有前缀内容，剥离掉前缀
             const span = element.querySelector('span');
             if (span) {
@@ -1488,11 +1488,11 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
                 linkText = linkText.replace(spanContent, '').trim();  // 移除 span 的前缀部分
                 console.log("2链接文本是", linkText);
             }
-    
+
             // 转换为 BBCode
             textContent = `[url=${url}][color=#00bfff][u]${linkText}[/u][/color][/url]`;
             rawContent = linkText;
-    
+
         } else if (element.tagName.toLowerCase() === 'span') {
             if (!element.closest('a') && element.querySelectorAll('a').length === 0) {
               textContent = element.innerHTML;
@@ -1502,13 +1502,13 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
             textContent = element.alt;
             rawContent = element.alt;
         }
-    
+
         // 确保 textContent 不为空再加入 texts
         if (textContent.trim()) {
             texts.push(textContent);
             rawTexts.push(rawContent.replace(/<a.*?>(.*?)<\/a>/g, '$1'));
         }
-      }             
+      }
       tweetMetadata.text = texts.join('');
       tweetMetadata.rawtext = rawTexts.join('');
       //I have tried my best but failed, if it still returns 'http://' or 'https://', please add the link manually.
@@ -1559,7 +1559,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
       buttonLight.style.height = '30px';
       buttonLight.style.textAlign = 'center';
       buttonLight.style.marginLeft = 'auto';
-      
+
       buttonLight.onmouseover = () => {
         buttonLight.style.backgroundColor = 'rgb(223, 223, 223)';
       };
@@ -1593,7 +1593,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
       buttonDark.style.height = '30px';
       buttonDark.style.textAlign = 'center';
       buttonDark.style.marginLeft = 'auto';
-      
+
       buttonDark.onmouseover = () => {
         buttonDark.style.backgroundColor = 'rgb(42, 42, 42)';
       };

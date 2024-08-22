@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.2.0
+// @version     3.2.1
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -124,7 +124,7 @@
         return match[1];
       }
     } else if (lowerUrl.includes('pre-release')) {
-      const versionRegex = /-edition-(\d+)-(\d+)-(\d*)(.+)-release-(\d+)/;
+      const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-release-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -140,7 +140,7 @@
         }
       }
     } else if (lowerUrl.includes('release-candidate')) {
-      const versionRegex = /-edition-(\d+)-(\d+)-(\d*)(.+)-candidate-(\d+)/;
+      const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-candidate-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -1576,7 +1576,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 [size=15px][color=${attributeColor}]由 ${GM_config.get('translator')} 翻译自${tweet.lang.startsWith('en') ? '英语' : ` ${tweet.lang}`}[/color][/size]
 
 [color=${foregroundColor}][size=23px]${content}[/size]
-  [/size][/color][/indent]<如有配图，请在此处添加>
+  [/size][/color][/indent][align=center]<如有配图，请在此处添加>[/align]
   [indent][size=15px][url=${tweet.tweetLink}][color=${attributeColor}][u]${dateString}[/u][/color][/url][/size][/indent][/td][/tr]
   [/table][/align]`;
   }
@@ -1688,6 +1688,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 
     case 'help.minecraft.net':
       help();
+    break;
   }
 })();
 //# sourceMappingURL=bundle.user.js.map

@@ -123,6 +123,38 @@
       if (match && match[1]) {
         return match[1];
       }
+    } else if (lowerUrl.includes('pre-release')) {
+      const versionRegex = /-edition-(\d+)-(\d+)-(\d*)(.+)-release-(\d+)/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match.length >= 5) {
+        const Version1 = match[1];
+        const Version2 = match[2];
+        const Version3 = match[3];
+        const Version4 = match[5];
+        if (Version3 == "") {
+          const formattedVersion = `${Version1}.${Version2}-pre${Version4}`;
+          return formattedVersion;
+        } else {
+          const formattedVersion = `${Version1}.${Version2}.${Version3}-pre${Version4}`;
+          return formattedVersion;
+        }
+      }
+    } else if (lowerUrl.includes('release-candidate')) {
+      const versionRegex = /-edition-(\d+)-(\d+)-(\d*)(.+)-candidate-(\d+)/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match.length >= 5) {
+        const Version1 = match[1];
+        const Version2 = match[2];
+        const Version3 = match[3];
+        const Version4 = match[5];
+        if (Version3 == "") {
+          const formattedVersion = `${Version1}.${Version2}-rc${Version4}`;
+          return formattedVersion;
+        } else {
+          const formattedVersion = `${Version1}.${Version2}.${Version3}-rc${Version4}`;
+          return formattedVersion;
+        }
+      }
     } else if (lowerUrl.includes('minecraft-beta-preview')) {
       const versionRegex = /-beta-preview-(\d+)-(\d+)-(\d+)-(\d+)/;
       const match = lowerUrl.match(versionRegex);
@@ -167,7 +199,7 @@
   let versioncode = getVersionCode(url1);
   function getHeader(articleType, type) {
     if (articleType.toLowerCase() !== 'news') {
-      return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n`;
+      return `[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
     }
 
     switch (type) {
@@ -182,14 +214,14 @@
         return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft Java 版[/b]是指 Windows、Mac OS 与 Linux 平台上，使用 Java 语言开发的 Minecraft 版本。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4][b]预发布版[/b]是 Minecraft Java 版的测试机制，如果该版本作为正式版发布，那么预发布版的游戏文件将与启动器推送的正式版完全相同。[/size]
 [color=#f44336][size=5]|[/size][/color][size=4]然而，预发布版主要用于服主和 Mod 制作者的预先体验，如果发现重大漏洞，该预发布版会被新的预发布版代替。因此建议普通玩家[color=Red]持观望态度[/color]。 [/size]
-[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，<当前版本号> 为其第 <计数> 个预览版。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个预览版。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.ReleaseCandidate:
         return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft Java 版[/b]是指运行在 Windows、Mac OS 与 Linux 平台上，使用 Java 语言开发的 Minecraft 版本。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4][b]候选版[/b]是 Minecraft Java 版正式版的候选版本，如果发现重大漏洞，该候选版会被新的候选版代替。如果一切正常，该版本将会作为正式版发布。[/size]
 [color=#f44336][size=5]|[/size][/color][size=4]候选版已可供普通玩家进行抢鲜体验，但仍需当心可能存在的漏洞。[/size]
-[color=#f44336][size=5]|[/size][/color][size=4]<正式版版本号> 仍未发布，<当前版本号> 为其第 <计数> 个预览版。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个预览版。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.Release:
@@ -199,14 +231,21 @@
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.BedrockRelease:
-        return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size][/align][align=left][align=left][color=#f44336][size=5]|[/size][/color][size=4][b]正式版[/b]是 Minecraft 基岩版经过一段时间的测试版测试之后得到的稳定版本，也是众多纹理、附加包和 Realms 会逐渐跟进的版本。与此同时 Google Play、Microsoft Store 等官方软件商店也会推送此次更新。 [/size][/align][align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
+        return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4][b]正式版[/b]是 Minecraft 基岩版经过一段时间的测试版测试之后得到的稳定版本，也是众多纹理、附加包和 Realms 会逐渐跟进的版本。与此同时 Google Play、Microsoft Store 等官方软件商店也会推送此次更新。 [/size]
+[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.BedrockBeta:
-        return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size][/align][align=left][color=#388e3c][size=5]|[/size][/color][size=4][b]测试版[/b]是 Minecraft 基岩版的测试机制，主要用于下一个正式版的特性预览。[/size][/align][/align][align=center][align=left][color=#f44336][size=5]|[/size][/color][size=4][b]然而，测试版主要用于新特性展示，通常存在大量漏洞。因此对于普通玩家建议仅做测试尝鲜用。使用测试版打开存档前请务必备份。适用于正式版的领域服务器与测试版不兼容。[/b] [/size][/align][/align][align=center][align=left][color=#f44336][size=5]|[/size][/color][size=4]如果在测试版中遇到旧版存档无法使用的问题，测试版将允许你将存档上传以供开发团队查找问题。[/size][/align][/align][align=center][align=left][color=#f44336][size=5]|[/size][/color][size=4]Minecraft 基岩版 <正式版版本号> 仍未发布，Beta & Preview ${versioncode} 为其第 <计数> 个测试版。[/size][/align][/align][align=center][align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n`;
+        return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size]
+[color=#388e3c][size=5]|[/size][/color][size=4][b]测试版[/b]是 Minecraft 基岩版的测试机制，主要用于下一个正式版的特性预览。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4][b]然而，测试版主要用于新特性展示，通常存在大量漏洞。因此对于普通玩家建议仅做测试尝鲜用。使用测试版打开存档前请务必备份。适用于正式版的领域服务器与测试版不兼容。[/b] [/size]
+[color=#f44336][size=5]|[/size][/color][size=4]如果在测试版中遇到旧版存档无法使用的问题，测试版将允许你将存档上传以供开发团队查找问题。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft 基岩版 <正式版版本号> 仍未发布，Beta & Preview ${versioncode} 为其第 <计数> 个测试版。[/size]
+[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.Normal:
       default:
-        return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n`;
+        return `[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
     }
   }
   function getFooter(articleType, type) {
@@ -249,7 +288,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
         return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.Normal:
-      default:
         return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
     }
   }
@@ -1134,7 +1172,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const img = html.getElementsByClassName('article-head__image')[0];
 
     if (!img) {
-      return `\n[align=center]${category}\n`;
+      return `\n[align=center]${category}[/align]\n`;
     }
 
     const src = img.src;
@@ -1313,7 +1351,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       let bbcode = await converthelpElementsToBBCode(heading, ctx);
       let title = bbcode;
       title = title.replace(/\n/g, '');
-      bbcode = `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n[size=6][b][color=silver]${bbcode}[/color][/b][/size][size=6][b]${bbcode}[/b][/size]\n`
+      bbcode = `[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n[size=6][b][color=silver]${bbcode}[/color][/b][/size][size=6][b]${bbcode}[/b][/size]\n`
       bbcode += await converthelpElementsToBBCode(content, ctx);
       bbcode += `[b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u] help.minecraft.net 上的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${version}】\n`;
       bbcode += getFooter('INSIDER',VersionType.Normal);
@@ -1538,7 +1576,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 [size=15px][color=${attributeColor}]由 ${GM_config.get('translator')} 翻译自${tweet.lang.startsWith('en') ? '英语' : ` ${tweet.lang}`}[/color][/size]
 
 [color=${foregroundColor}][size=23px]${content}[/size]
-  [/size][/color][/indent][align=center]<如有配图，请在此处添加>[/align]
+  [/size][/color][/indent]<如有配图，请在此处添加>
   [indent][size=15px][url=${tweet.tweetLink}][color=${attributeColor}][u]${dateString}[/u][/color][/url][/size][/indent][/td][/tr]
   [/table][/align]`;
   }
@@ -1638,7 +1676,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
   switch (location.host) {
     case 'www.minecraft.net'://Fuck minecraft.net what the heck are you doing.
       minecraftNet();
-      break;
+    break;
 
     case 'x.com':
       twitter();
@@ -1646,11 +1684,10 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 
     case 'feedback.minecraft.net':
       feedback();
-      break;
+    break;
 
     case 'help.minecraft.net':
       help();
   }
-
 })();
 //# sourceMappingURL=bundle.user.js.map

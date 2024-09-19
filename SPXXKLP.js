@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.2.0
+// @version     3.2.2
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -88,7 +88,7 @@
     }
   };
 
-  var version = "3.2.0";
+  var version = "3.2.2";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -123,8 +123,40 @@
       if (match && match[1]) {
         return match[1];
       }
+    } else if (lowerUrl.includes('pre-release')) {
+      const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-release-(\d+)/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match.length >= 5) {
+        const Version1 = match[1];
+        const Version2 = match[2];
+        const Version3 = match[3];
+        const Version4 = match[5];
+        if (Version3 == "") {
+          const formattedVersion = `${Version1}.${Version2}-pre${Version4}`;
+          return formattedVersion;
+        } else {
+          const formattedVersion = `${Version1}.${Version2}.${Version3}-pre${Version4}`;
+          return formattedVersion;
+        }
+      }
+    } else if (lowerUrl.includes('release-candidate')) {
+      const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-candidate-(\d+)/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match.length >= 5) {
+        const Version1 = match[1];
+        const Version2 = match[2];
+        const Version3 = match[3];
+        const Version4 = match[5];
+        if (Version3 == "") {
+          const formattedVersion = `${Version1}.${Version2}-rc${Version4}`;
+          return formattedVersion;
+        } else {
+          const formattedVersion = `${Version1}.${Version2}.${Version3}-rc${Version4}`;
+          return formattedVersion;
+        }
+      }
     } else if (lowerUrl.includes('minecraft-beta-preview')) {
-      const versionRegex = /\-beta-preview\-(\d+)\-(\d+)\-(\d+)\-(\d+)/;
+      const versionRegex = /-beta-preview-(\d+)-(\d+)-(\d+)-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -135,7 +167,7 @@
         return formattedVersion;
       }
     } else if (lowerUrl.includes('minecraft-preview') && !lowerUrl.includes('beta')) {
-      const versionRegex = /\-preview\-(\d+)\-(\d+)\-(\d+)\-(\d+)/;
+      const versionRegex = /-preview-(\d+)-(\d+)-(\d+)-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -146,7 +178,7 @@
         return formattedVersion;
       }
     } else if (lowerUrl.includes('minecraft-beta') && !lowerUrl.includes('preview')) {
-      const versionRegex = /\-beta\-(\d+)\-(\d+)\-(\d+)\-(\d+)/;
+      const versionRegex = /-beta-(\d+)-(\d+)-(\d+)-(\d+)/;
       const match = lowerUrl.match(versionRegex);
       if (match && match.length >= 5) {
         const Version1 = match[1];
@@ -167,7 +199,7 @@
   let versioncode = getVersionCode(url1);
   function getHeader(articleType, type) {
     if (articleType.toLowerCase() !== 'news') {
-      return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n`;
+      return `[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
     }
 
     switch (type) {
@@ -182,14 +214,14 @@
         return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft Java 版[/b]是指 Windows、Mac OS 与 Linux 平台上，使用 Java 语言开发的 Minecraft 版本。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4][b]预发布版[/b]是 Minecraft Java 版的测试机制，如果该版本作为正式版发布，那么预发布版的游戏文件将与启动器推送的正式版完全相同。[/size]
 [color=#f44336][size=5]|[/size][/color][size=4]然而，预发布版主要用于服主和 Mod 制作者的预先体验，如果发现重大漏洞，该预发布版会被新的预发布版代替。因此建议普通玩家[color=Red]持观望态度[/color]。 [/size]
-[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，<当前版本号> 为其第 <计数> 个预览版。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个预览版。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.ReleaseCandidate:
         return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft Java 版[/b]是指运行在 Windows、Mac OS 与 Linux 平台上，使用 Java 语言开发的 Minecraft 版本。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4][b]候选版[/b]是 Minecraft Java 版正式版的候选版本，如果发现重大漏洞，该候选版会被新的候选版代替。如果一切正常，该版本将会作为正式版发布。[/size]
 [color=#f44336][size=5]|[/size][/color][size=4]候选版已可供普通玩家进行抢鲜体验，但仍需当心可能存在的漏洞。[/size]
-[color=#f44336][size=5]|[/size][/color][size=4]<正式版版本号> 仍未发布，<当前版本号> 为其第 <计数> 个预览版。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个预览版。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.Release:
@@ -199,14 +231,21 @@
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.BedrockRelease:
-        return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size][/align][align=left][align=left][color=#f44336][size=5]|[/size][/color][size=4][b]正式版[/b]是 Minecraft 基岩版经过一段时间的测试版测试之后得到的稳定版本，也是众多纹理、附加包和 Realms 会逐渐跟进的版本。与此同时 Google Play、Microsoft Store 等官方软件商店也会推送此次更新。 [/size][/align][align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
+        return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4][b]正式版[/b]是 Minecraft 基岩版经过一段时间的测试版测试之后得到的稳定版本，也是众多纹理、附加包和 Realms 会逐渐跟进的版本。与此同时 Google Play、Microsoft Store 等官方软件商店也会推送此次更新。 [/size]
+[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.BedrockBeta:
-        return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size][/align][align=left][color=#388e3c][size=5]|[/size][/color][size=4][b]测试版[/b]是 Minecraft 基岩版的测试机制，主要用于下一个正式版的特性预览。[/size][/align][/align][align=center][align=left][color=#f44336][size=5]|[/size][/color][size=4][b]然而，测试版主要用于新特性展示，通常存在大量漏洞。因此对于普通玩家建议仅做测试尝鲜用。使用测试版打开存档前请务必备份。适用于正式版的领域服务器与测试版不兼容。[/b] [/size][/align][/align][align=center][align=left][color=#f44336][size=5]|[/size][/color][size=4]如果在测试版中遇到旧版存档无法使用的问题，测试版将允许你将存档上传以供开发团队查找问题。[/size][/align][/align][align=center][align=left][color=#f44336][size=5]|[/size][/color][size=4]Minecraft 基岩版 <正式版版本号> 仍未发布，Beta & Preview ${versioncode} 为其第 <计数> 个测试版。[/size][/align][/align][align=center][align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n`;
+        return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft 基岩版[/b]是指运行在移动平台（Android、iOS）、Windows 10/11、主机（Xbox One、Switch、PlayStation 4/5）上，使用「基岩引擎」（C++语言）开发的 Minecraft 版本。[/size]
+[color=#388e3c][size=5]|[/size][/color][size=4][b]测试版[/b]是 Minecraft 基岩版的测试机制，主要用于下一个正式版的特性预览。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4][b]然而，测试版主要用于新特性展示，通常存在大量漏洞。因此对于普通玩家建议仅做测试尝鲜用。使用测试版打开存档前请务必备份。适用于正式版的领域服务器与测试版不兼容。[/b] [/size]
+[color=#f44336][size=5]|[/size][/color][size=4]如果在测试版中遇到旧版存档无法使用的问题，测试版将允许你将存档上传以供开发团队查找问题。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft 基岩版 <正式版版本号> 仍未发布，Beta & Preview ${versioncode} 为其第 <计数> 个测试版。[/size]
+[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.Normal:
       default:
-        return `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n`;
+        return `[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
     }
   }
   function getFooter(articleType, type) {
@@ -249,7 +288,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
         return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
 
       case VersionType.Normal:
-      default:
         return `\n${poweredBy}\n[hr][color=#388e3c][size=5]|[/size][/color][size=4][b]想了解更多游戏资讯？[/b][/size][list][*][size=3][url=https://klpbbs.com/forum-2-1.html][color=#388e3c][u]苦力怕论坛 - 游戏资讯版块[/u][/color][/url][/size][/list]`;
     }
   }
@@ -270,15 +308,15 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       return translator(input, ctx, [// Minecraft.net titles
       [/Block of the Week: /gi, '本周方块：'], [/Taking Inventory: /gi, '背包盘点：'], [/Around the Block: /gi, '群系漫游：'], [/A Minecraft Java Snapshot/gi, 'Minecraft Java版 快照'], [/A Minecraft Java Pre-Release/gi, 'Minecraft Java版 预发布版'], [/A Minecraft Java Release Candidate/gi, 'Minecraft Java版 候选版本'], // Bedrock Edition titles
       [/Minecraft Beta (?:-|——) (.*?) \((.*?)\)/gi, 'Minecraft 基岩版 Beta $1（$2）'], [/Minecraft Beta & Preview - (.*?)/g, 'Minecraft 基岩版 Beta & Preview $1'], [/Minecraft (?:-|——) (.*?) \(Bedrock\)/gi, 'Minecraft 基岩版 $1'], [/Minecraft (?:-|——) (.*?) \((.*?) Only\)/gi, 'Minecraft 基岩版 $1（仅$2）'], [/Minecraft (?:-|——) (.*?) \((.*?)\)/gi, 'Minecraft 基岩版 $1（仅$2）'], // BE subheadings
-      [/Marketplace/gi, '市场'], [/Data-Driven/gi, '数据驱动'], [/Graphical/gi, '图像'], [/Player/gi, '玩家'], [/Experimental Features/gi, '实验性特性'], [/Mobs/gi, '生物'], [/Features and Bug Fixes/gi, '特性和漏洞修复'], [/ADVANCEMENTS/gi, '进度'], [/Accessibility/gi, '辅助功能'], [/Gameplay/gi, '玩法'], [/Items/gi, '物品'], [/Blocks/gi, '方块'], [/User Interface/gi, '用户界面'], [/Commands/gi, '命令'], [/Known Issues/gi, '已知问题'], [/Character Creator/gi, '角色创建器'], [/Components/gi, '组件'], [/General/gi, '通用'], [/Technical Experimental Updates/gi, '实验性技术性更新'], [/Gametest Framework/gi, 'Gametest 框架'], [/Gametest Framework (experimental)/gi, 'Gametest 框架（实验性）'], // JE subheadings
-      [/Minecraft Snapshot /gi, 'Minecraft 快照 '], [/ Pre-Release /gi, '-pre'], [/ Release Candidate /gi, '-rc'], [/Release Candidate/gi, '候选版本'], [/New Features in ([^\r\n]+)/gi, '$1 的新增特性'], [/Technical changes in ([^\r\n]+)/gi, '$1 的技术性修改'], [/Changes in ([^\r\n]+)/gi, '$1 的修改内容'], [/Fixed bugs in ([^\r\n]+)/gi, '$1 修复的漏洞'], [/STABILITY AND PERFORMANCE/gi, '性能与稳定性'], [/FEATURES AND BUG FIXES/gi, '特性和漏洞修复'],[/LOOT/gi, '战利品'], [/PARITY/gi, '趋同'], [/ADD-ONS AND SCRIPT ENGINE/gi, '附加包和脚本引擎'], [/DRESSING ROOM/gi, '更衣室'], [/Item/gi, '物品'], [/CHANGES/gi, '改动'], [/SOUNDS/gi, '音效'], [/DATA PACK VERSION/gi, '数据包版本'], [/PREDICATES/gi, '谓词'], [/ENTITY/gi, '实体'], [/ENCHANTMENTS/gi, '附魔'], [/TAGS/gi, '标签'], [/TYPE/gi, '类型'], [/MUSIC/gi, '音乐'], [/GAME TIPS/gi, '游戏提示'], [/NEW FEATURE/gi, '新特性'], [/USER INTERFACE/gi, '用户界面'], [/EDITOR/gi, '编辑器'], [/FIXES/gi, '修复'], [/IMPROVEMENTS/gi, '改进'], [/RESOURCE PACK VERSION/gi, '资源包版本'], [/SHADERS/gi, '着色器'], [/PARTICLES/gi, '粒子效果'], [/TOUCH CONTROLS/gi, '触控'], [/TECHNICAL UPDATES/gi, '技术性更新'], [/PROJECTILES/gi, '弹射物'], [/ENTITIES/gi, '实体'], [/FUNCTIONS/gi, '函数']]);
+      [/Marketplace/gi, '市场'], [/Data-Driven/gi, '数据驱动'], [/Graphical/gi, '图像'], [/Player/gi, '玩家'], [/Experimental Features/gi, '实验性特性'], [/Mobs/gi, '生物'], [/Features and Bug Fixes/gi, '特性和漏洞修复'], [/ADVANCEMENTS/gi, '进度'], [/Accessibility/gi, '辅助功能'], [/Gameplay/gi, '玩法'], [/Items/gi, '物品'], [/Blocks/gi, '方块'], [/User Interface/gi, '用户界面'], [/Commands/gi, '命令'], [/Known Issues/gi, '已知问题'], [/Character Creator/gi, '角色创建器'], [/ Components/gi, '组件'], [/General/gi, '通用'], [/Technical Experimental Updates/gi, '实验性技术性更新'], [/Technical /gi, '技术性'], [/Gametest Framework/gi, 'Gametest 框架'], [/Gametest Framework (experimental)/gi, 'Gametest 框架（实验性）'], // JE subheadings
+      [/Minecraft Snapshot /gi, 'Minecraft 快照 '], [/ Pre-Release /gi, '-pre'], [/ Release Candidate /gi, '-rc'], [/Get the Release Candidate/gi, '获取预发布版本'], [/Get the Release/gi, '获取正式版'], [/Get the Pre-Release/gi, '获取候选版本'], [/Get the Snapshot/gi, '获取快照版本'], [/New Features in ([^\r\n]+)/gi, '$1 的新增特性'], [/Technical changes in ([^\r\n]+)/gi, '$1 的技术性修改'], [/Changes in ([^\r\n]+)/gi, '$1 的修改内容'], [/Fixed bugs in ([^\r\n]+)/gi, '$1 修复的漏洞'], [/STABILITY AND PERFORMANCE/gi, '性能与稳定性'], [/FEATURES AND BUG FIXES/gi, '特性和漏洞修复'],[/LOOT/gi, '战利品'], [/PARITY/gi, '趋同'], [/Components/gi, '组件'], [/ADD-ONS AND SCRIPT ENGINE/gi, '附加包和脚本引擎'], [/DRESSING ROOM/gi, '更衣室'], [/Item/gi, '物品'], [/CHANGES/gi, '改动'], [/SOUNDS/gi, '音效'], [/DATA PACK VERSION/gi, '数据包版本'], [/PREDICATES/gi, '谓词'], [/ PREDICATE/gi, '谓词'], [/EFFECT/gi, '效果'], [/COMMAND/gi, '命令'], [/ATTRIBUTE/gi, '属性'], [/BLOCK/gi, '方块'], [/ENTITY/gi, '实体'], [/ENCHANTMENTS/gi, '附魔'], [/ TAGS/gi, '标签'], [/TAGS/gi, '标签'], [/TYPE/gi, '类型'], [/MUSIC/gi, '音乐'], [/GAME TIPS/gi, '游戏提示'], [/NEW FEATURES/gi, '新特性'], [/NEW /gi, '新的'], [/USER INTERFACE/gi, '用户界面'], [/EDITOR/gi, '编辑器'], [/FIXES/gi, '修复'], [/IMPROVEMENTS/gi, '改进'], [/RESOURCE PACK VERSION/gi, '资源包版本'], [/SHADERS/gi, '着色器'], [/PARTICLES/gi, '粒子效果'], [/TOUCH CONTROLS/gi, '触控'], [/TECHNICAL UPDATES/gi, '技术性更新'], [/ TABLES/gi, '表'], [/PROJECTILES/gi, '弹射物'], [/STRUCTURES/gi, '结构'], [/ENTITIES/gi, '实体'], [/FUNCTIONS/gi, '函数']]);
     },
     imgCredits: (input, ctx) => {
       return translator(input, ctx, [// Creative Commons image credits
       [/Image credit:/gi, '图片来源：'], [/CC BY-NC-ND/gi, '知识共享 署名-非商业性使用-禁止演绎'], [/CC BY-NC-SA/gi, '知识共享 署名-非商业性使用-相同方式共享'], [/CC BY-NC/gi, '知识共享 署名-非商业性使用'], [/CC BY-ND/gi, '知识共享 署名-禁止演绎'], [/CC BY-SA/gi, '知识共享 署名-相同方式共享'], [/CC BY/gi, '知识共享 署名'], [/Public Domain/gi, '公有领域']]);
     },
     punctuation: (input, ctx) => {
-      return translator(input, ctx, [[/\[i\]/gi, '[font=楷体]'], [/\[\/i\]/g, '[/font]'], ...(ctx.disablePunctuationConverter ? [] : [[/,( |$)/g, '，'], [/!( |$)/g, '！'], [/\.\.\.( |$)/g, '…'], [/\.( |$)/g, '。'], [/\?( |$)/g, '？'], [/( |^)-( |$)/g, ' —— ']])], input => {
+      return translator(input, ctx, [[/\[i]/gi, '[font=楷体]'], [/\[\/i]/g, '[/font]'], ...(ctx.disablePunctuationConverter ? [] : [[/,( |$)/g, '，'], [/!( |$)/g, '！'], [/\.\.\.( |$)/g, '…'], [/\.( |$)/g, '。'], [/\?( |$)/g, '？'], [/( |^)-( |$)/g, ' —— ']])], input => {
         return quoteTreatment(input, [['“', '”', /"/]]);
       });
     },
@@ -433,7 +471,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
         case 'H5':
           return converters.h5(node, ctx);
-        
+
         case 'BUTTON':
         case 'NAV':
         case 'svg':
@@ -601,7 +639,15 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     h1: async (ele, ctx) => {
       const prefix = '[size=6][b]';
       const suffix = '[/b][/size]';
-      const rawInner = await converters.recurse(ele, ctx);
+      const processNode = async (node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            return await converters[node.tagName.toLowerCase()](node, ctx);
+        } else if (node.nodeType === Node.TEXT_NODE) {
+            return node.nodeValue;
+        }
+      };
+      const rawInnerArray = await Promise.all(Array.from(ele.childNodes).map(processNode));
+      const rawInner = rawInnerArray.join('');
       const inner = makeUppercaseHeader(rawInner);
       const ans = `${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${translate(`${inner}`, ctx, ['headings', 'punctuation']).replace(/[\n\r]+/g, ' ')}${suffix}\n\n`;
       return ans;
@@ -610,7 +656,15 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       if (isBlocklisted(ele.textContent)) return '';
       const prefix = '[size=5][b]';
       const suffix = '[/b][/size]';
-      const rawInner = await converters.recurse(ele, ctx);
+      const processNode = async (node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            return await converters[node.tagName.toLowerCase()](node, ctx);
+        } else if (node.nodeType === Node.TEXT_NODE) {
+            return node.nodeValue;
+        }
+      };
+      const rawInnerArray = await Promise.all(Array.from(ele.childNodes).map(processNode));
+      const rawInner = rawInnerArray.join('');
       const inner = makeUppercaseHeader(rawInner);
       const ans = `\n${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${translate(`${inner}`, ctx, ['headings', 'punctuation']).replace(/[\n\r]+/g, ' ')}${suffix}\n\n`;
       return ans;
@@ -618,7 +672,15 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     h3: async (ele, ctx) => {
       const prefix = '[size=4][b]';
       const suffix = '[/b][/size]';
-      const rawInner = await converters.recurse(ele, ctx);
+      const processNode = async (node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            return await converters[node.tagName.toLowerCase()](node, ctx);
+        } else if (node.nodeType === Node.TEXT_NODE) {
+            return node.nodeValue;
+        }
+      };
+      const rawInnerArray = await Promise.all(Array.from(ele.childNodes).map(processNode));
+      const rawInner = rawInnerArray.join('');
       const inner = makeUppercaseHeader(rawInner);
       const ans = `\n${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${translate(`${inner}`, ctx, ['headings', 'punctuation']).replace(/[\n\r]+/g, ' ')}${suffix}\n\n`;
       return ans;
@@ -626,17 +688,33 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     h4: async (ele, ctx) => {
       const prefix = '[size=3][b]';
       const suffix = '[/b][/size]';
-      const rawInner = await converters.recurse(ele, ctx);
+      const processNode = async (node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+              return await converters[node.tagName.toLowerCase()](node, ctx);
+          } else if (node.nodeType === Node.TEXT_NODE) {
+              return node.nodeValue;
+          }
+      };
+      const rawInnerArray = await Promise.all(Array.from(ele.childNodes).map(processNode));
+      const rawInner = rawInnerArray.join('');
       const inner = makeUppercaseHeader(rawInner);
-      const ans = `\n${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${translate(`${inner}`, ctx, ['headings', 'punctuation']).replace(/[\n\r]+/g, ' ')}${suffix}\n\n`;
+      const ans = `\n${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${inner}${suffix}\n\n`;
       return ans;
     },
     h5: async (ele, ctx) => {
       const prefix = '[size=2][b]';
       const suffix = '[/b][/size]';
-      const rawInner = await converters.recurse(ele, ctx);
+      const processNode = async (node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            return await converters[node.tagName.toLowerCase()](node, ctx);
+        } else if (node.nodeType === Node.TEXT_NODE) {
+            return node.nodeValue;
+        }
+      };
+      const rawInnerArray = await Promise.all(Array.from(ele.childNodes).map(processNode));
+      const rawInner = rawInnerArray.join('');
       const inner = makeUppercaseHeader(rawInner);
-      const ans = `\n${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${translate(`${inner}`, ctx, ['headings', 'punctuation']).replace(/[\n\r]+/g, ' ')}${suffix}\n\n`;
+      const ans = `\n${prefix}[color=Silver]${usingSilver(inner).replace(/[\n\r]+/g, ' ')}[/color]${suffix}\n${prefix}${inner}${suffix}\n\n`;
       return ans;
     },
     i: async (ele, ctx) => {
@@ -727,10 +805,22 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       return ans;
     },
     p: async (ele, ctx) => {
-      const inner = await converters.recurse(ele, ctx);
+      const processNode = async (node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+              const converter = converters[node.tagName.toLowerCase()];
+              if (converter) {
+                  return await converter(node, ctx);
+              }
+          } else if (node.nodeType === Node.TEXT_NODE) {
+              return node.nodeValue;
+          }
+      };
+      const rawInnerArray = await Promise.all(Array.from(ele.childNodes).map(processNode));
+      const inner = rawInnerArray.join('').trim();
+  
       let ans;
   
-      if (inner.trim() === '') {
+      if (inner === '') {
           return '';
       }
   
@@ -740,11 +830,11 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
           ans = `[size=4][b][size=2][color=Silver]${inner}[/color][/size][/b][/size]\n[size=4][b]${translate(inner, ctx, 'headings')}[/b][/size]\n`;
       } else if (ele.querySelector('strong') !== null && ele.querySelector('strong').textContent === 'Posted:') {
           return '';
-      } else if (isBlocklisted(ele.textContent)) {
+      } else if (isBlocklisted(inner)) {
           return '';
       } else if (ele.innerHTML.trim() === '&nbsp;') {
           return '';
-      } else if (/\s{0,}/.test(ele.textContent) && ele.querySelectorAll('img').length === 1) {
+      } else if (/\s{0,}/.test(inner) && ele.querySelectorAll('img').length === 1) {
           return inner;
       } else {
           if (ctx.inList) {
@@ -755,18 +845,18 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       }
   
       return ans;
-    },  
+    },
     picture: async (ele, ctx) => {
       const ans = await converters.recurse(ele, ctx);
       return ans;
     },
     figure: async (ele, ctx) => {
       console.log("Processing <figure> element:", ele);
-    
+
       // 递归处理 figure 内部的所有元素
       const ans = await converters.recurse(ele, ctx);
       console.log("Recurse output for <figure> element:", ans);
-    
+
       return ans;
     },
     pre: async (ele, ctx) => {
@@ -884,7 +974,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
   }
   /**
    * Get bugs from BugCenter.
-   * Guangyao and github source are down, so I deleted them.
+   * Guangyao and GitHub source are down, so I deleted them.
    */
 
   async function getBugs() {
@@ -1004,11 +1094,11 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
   async function minecraftNet() {
     const url = document.location.toString();
-  
+
     if (url.match(/^https:\/\/www\.minecraft\.net\/(?:[a-z-]+)\/article\//)) {
       const authorContainer = document.querySelector('.MC_articleHeroA_attribution_author');
       const dateElement = authorContainer.querySelector('dd:nth-child(4)'); // 获取发布日期的 dd 元素
-  
+
       const button = document.createElement('button');
       button.classList.add('spxxklp-userscript-ignored');
       button.innerText = '复制 BBCode';
@@ -1092,7 +1182,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const heroImage = getHeroImage(html, articleType);
     const maintitle = await getMainTitle(html);
     const subtitle = await getSubTitle(html);
-    const content = await getContent(html, {
+    let content = await getContent(html, {
       bugs,
       bugsTranslators,
       translatorColor,
@@ -1134,7 +1224,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     const img = html.getElementsByClassName('article-head__image')[0];
 
     if (!img) {
-      return `\n[align=center]${category}\n`;
+      return `\n[align=center]${category}[/align]\n`;
     }
 
     const src = img.src;
@@ -1155,7 +1245,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     let con = html.getElementsByClassName("MC_articleHeroA_header_container")[0];
     let maintitle = con.getElementsByClassName("MC_Heading_1")[0].innerText;
     return maintitle;
-  }  
+  }
 
   async function getAuthor(html, translator = config.translator) {
     let rawauthor = html.getElementsByClassName("MC_articleHeroA_attribution_author")[0];
@@ -1191,7 +1281,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
         let rootDiv = containerElements[i];
         let ans = await converters.recurse(rootDiv, ctx);
         ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2');
-        ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2');
+        ans = ans.replace(/(\[\/[^\]]+?])([a-zA-Z0-9\-._])/g, '$1 $2');
         results.push(ans);
     }
 
@@ -1253,10 +1343,10 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     for (let element of elements) {
         try {
             let converted = await converters.recurse(element, ctx);
-            let imgTags = converted.match(/\[img\](.*?)\[\/img\]/g);
+            let imgTags = converted.match(/\[img](.*?)\[\/img]/g);
             if (imgTags) {
                 for (let imgTag of imgTags) {
-                    let imgUrl = imgTag.match(/\[img\](.*?)\[\/img\]/)[1];
+                    let imgUrl = imgTag.match(/\[img](.*?)\[\/img]/)[1];
                     if (seenImages.has(imgUrl)) {
                         converted = converted.replace(imgTag, '');
                     } else {
@@ -1313,7 +1403,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       let bbcode = await converthelpElementsToBBCode(heading, ctx);
       let title = bbcode;
       title = title.replace(/\n/g, '');
-      bbcode = `[align=left][color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][/align][/align][/align][/align][hr]\n[size=6][b][color=silver]${bbcode}[/color][/b][/size][size=6][b]${bbcode}[/b][/size]\n`
+      bbcode = `[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n[size=6][b][color=silver]${bbcode}[/color][/b][/size][size=6][b]${bbcode}[/b][/size]\n`
       bbcode += await converthelpElementsToBBCode(content, ctx);
       bbcode += `[b]【${ctx.translator} 译自[url=${ctx.url}][color=#388d40][u] help.minecraft.net 上的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${version}】\n`;
       bbcode += getFooter('INSIDER',VersionType.Normal);
@@ -1365,7 +1455,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 
     ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2'); // Add spaces between '[/x]' and texts.
 
-    ans = ans.replace(/(\[\/[^\]]+?\])([a-zA-Z0-9\-._])/g, '$1 $2');
+    ans = ans.replace(/(\[\/[^\]]+?])([a-zA-Z0-9\-._])/g, '$1 $2');
     return ans;
   }
 
@@ -1468,19 +1558,19 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
       tweetMetadata.userName = posterNameContent.join('');
       let texts = [];
       let rawTexts = [];
-      
+
       const articleDivs = document.querySelector('article div[lang]').querySelectorAll('a, span, img[alt]');
 
       for (const element of articleDivs) {
         let textContent = '';
         let rawContent = '';
-    
+
         if (element.tagName.toLowerCase() === 'a') {
             const url = element.href;
             console.log("1链接是", url);
             let linkText = element.textContent.trim();  // 直接使用 a 标签的文本内容
             console.log("1链接文本是", linkText);
-    
+
             // 如果 a 标签中包含 span，并且 span 有前缀内容，剥离掉前缀
             const span = element.querySelector('span');
             if (span) {
@@ -1488,11 +1578,11 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
                 linkText = linkText.replace(spanContent, '').trim();  // 移除 span 的前缀部分
                 console.log("2链接文本是", linkText);
             }
-    
+
             // 转换为 BBCode
             textContent = `[url=${url}][color=#00bfff][u]${linkText}[/u][/color][/url]`;
             rawContent = linkText;
-    
+
         } else if (element.tagName.toLowerCase() === 'span') {
             if (!element.closest('a') && element.querySelectorAll('a').length === 0) {
               textContent = element.innerHTML;
@@ -1502,13 +1592,13 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
             textContent = element.alt;
             rawContent = element.alt;
         }
-    
+
         // 确保 textContent 不为空再加入 texts
         if (textContent.trim()) {
             texts.push(textContent);
             rawTexts.push(rawContent.replace(/<a.*?>(.*?)<\/a>/g, '$1'));
         }
-      }             
+      }
       tweetMetadata.text = texts.join('');
       tweetMetadata.rawtext = rawTexts.join('');
       //I have tried my best but failed, if it still returns 'http://' or 'https://', please add the link manually.
@@ -1559,7 +1649,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
       buttonLight.style.height = '30px';
       buttonLight.style.textAlign = 'center';
       buttonLight.style.marginLeft = 'auto';
-      
+
       buttonLight.onmouseover = () => {
         buttonLight.style.backgroundColor = 'rgb(223, 223, 223)';
       };
@@ -1593,7 +1683,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
       buttonDark.style.height = '30px';
       buttonDark.style.textAlign = 'center';
       buttonDark.style.marginLeft = 'auto';
-      
+
       buttonDark.onmouseover = () => {
         buttonDark.style.backgroundColor = 'rgb(42, 42, 42)';
       };
@@ -1638,7 +1728,7 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
   switch (location.host) {
     case 'www.minecraft.net'://Fuck minecraft.net what the heck are you doing.
       minecraftNet();
-      break;
+    break;
 
     case 'x.com':
       twitter();
@@ -1646,11 +1736,11 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 
     case 'feedback.minecraft.net':
       feedback();
-      break;
+    break;
 
     case 'help.minecraft.net':
       help();
+    break;
   }
-
 })();
 //# sourceMappingURL=bundle.user.js.map

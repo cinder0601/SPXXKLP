@@ -738,7 +738,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       }
 
       const prefix = w && h ? `[img=${w},${h}]` : '[img]';
-      console.log(img.src);
       const imgUrl = resolveUrl(img.src);
       if (imgUrl === '') return ''; // in case of empty image
 
@@ -1200,7 +1199,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
   function getArticleType(html) {
     try {
       const type = html.getElementsByClassName('MC_articleHeroA_category')?.[0]?.textContent ?? '';
-      console.log("ArticleType is ",type);
       return type.toUpperCase();
     } catch (e) {
       console.error('[getArticleType]', e);
@@ -1252,7 +1250,6 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     let url = window.location.href;
     let title = await getMainTitle(html);
     let ans = `\n[float=left][img]${authorImgUrl}[/img][/float]\n\n\n【${translator} 译自[url=${url}][color=#388d40][u]${authorName} ${year} 年 ${month} 月 ${day} 日发布的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${spxxklpVersion}】`;
-    console.log(ans);
     return ans;
   }
 
@@ -1563,19 +1560,12 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
 
         if (element.tagName.toLowerCase() === 'a') {
             const url = element.href;
-            console.log("1链接是", url);
-            let linkText = element.textContent.trim();  // 直接使用 a 标签的文本内容
-            console.log("1链接文本是", linkText);
-
-            // 如果 a 标签中包含 span，并且 span 有前缀内容，剥离掉前缀
+            let linkText = element.textContent.trim();
             const span = element.querySelector('span');
             if (span) {
                 let spanContent = span.textContent.trim();
-                linkText = linkText.replace(spanContent, '').trim();  // 移除 span 的前缀部分
-                console.log("2链接文本是", linkText);
+                linkText = linkText.replace(spanContent, '').trim();
             }
-
-            // 转换为 BBCode
             textContent = `[url=${url}][color=#00bfff][u]${linkText}[/u][/color][/url]`;
             rawContent = linkText;
 
@@ -1588,8 +1578,6 @@ ${translate(`[size=6][b]${title}[/b][/size]`, ctx, 'headings')}[/align]\n\n${con
             textContent = element.alt;
             rawContent = element.alt;
         }
-
-        // 确保 textContent 不为空再加入 texts
         if (textContent.trim()) {
             texts.push(textContent);
             rawTexts.push(rawContent.replace(/<a.*?>(.*?)<\/a>/g, '$1'));

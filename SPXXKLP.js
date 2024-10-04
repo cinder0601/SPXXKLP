@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.2.2
+// @version     3.2.2a
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -88,7 +88,7 @@
     }
   };
 
-  var version = "3.2.2";
+  var version = "3.2.2a";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -308,7 +308,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       return translator(input, ctx, [// Minecraft.net titles
       [/Block of the Week: /gi, '本周方块：'], [/Taking Inventory: /gi, '背包盘点：'], [/Around the Block: /gi, '群系漫游：'], [/A Minecraft Java Snapshot/gi, 'Minecraft Java版 快照'], [/A Minecraft Java Pre-Release/gi, 'Minecraft Java版 预发布版'], [/A Minecraft Java Release Candidate/gi, 'Minecraft Java版 候选版本'], // Bedrock Edition titles
       [/Minecraft Beta (?:-|——) (.*?) \((.*?)\)/gi, 'Minecraft 基岩版 Beta $1（$2）'], [/Minecraft Beta & Preview - (.*?)/g, 'Minecraft 基岩版 Beta & Preview $1'], [/Minecraft (?:-|——) (.*?) \(Bedrock\)/gi, 'Minecraft 基岩版 $1'], [/Minecraft (?:-|——) (.*?) \((.*?) Only\)/gi, 'Minecraft 基岩版 $1（仅$2）'], [/Minecraft (?:-|——) (.*?) \((.*?)\)/gi, 'Minecraft 基岩版 $1（仅$2）'], // BE subheadings
-      [/Marketplace/gi, '市场'], [/Data-Driven/gi, '数据驱动'], [/Graphical/gi, '图像'], [/Player/gi, '玩家'], [/Experimental Features/gi, '实验性特性'], [/Mobs/gi, '生物'], [/Features and Bug Fixes/gi, '特性和漏洞修复'], [/ADVANCEMENTS/gi, '进度'], [/Accessibility/gi, '辅助功能'], [/Gameplay/gi, '玩法'], [/Items/gi, '物品'], [/Blocks/gi, '方块'], [/User Interface/gi, '用户界面'], [/Commands/gi, '命令'], [/Known Issues/gi, '已知问题'], [/Character Creator/gi, '角色创建器'], [/ Components/gi, '组件'], [/General/gi, '通用'], [/Technical Experimental Updates/gi, '实验性技术性更新'], [/Technical /gi, '技术性'], [/Gametest Framework/gi, 'Gametest 框架'], [/Gametest Framework (experimental)/gi, 'Gametest 框架（实验性）'], // JE subheadings
+      [/Marketplace/gi, '市场'], [/Data-Driven/gi, '数据驱动'], [/Graphical/gi, '图像'], [/Vanilla /gi, '原版'], [/Player/gi, '玩家'], [/Experimental /gi, '实验性'], [/Mobs/gi, '生物'], [/Features and Bug Fixes/gi, '特性和漏洞修复'], [/ADVANCEMENTS/gi, '进度'], [/Accessibility/gi, '辅助功能'], [/Gameplay/gi, '玩法'], [/Items/gi, '物品'], [/Blocks/gi, '方块'], [/User Interface/gi, '用户界面'], [/Commands/gi, '命令'], [/Known Issues/gi, '已知问题'], [/Character Creator/gi, '角色创建器'], [/ Components/gi, '组件'], [/General/gi, '通用'], [/Technical Experimental Updates/gi, '实验性技术性更新'], [/Gametest Framework/gi, 'Gametest 框架'], [/Gametest Framework (experimental)/gi, 'Gametest 框架（实验性）'], // JE subheadings
       [/Minecraft Snapshot /gi, 'Minecraft 快照 '], [/ Pre-Release /gi, '-pre'], [/ Release Candidate /gi, '-rc'], [/Get the Release Candidate/gi, '获取预发布版本'], [/Get the Release/gi, '获取正式版'], [/Get the Pre-Release/gi, '获取候选版本'], [/Get the Snapshot/gi, '获取快照版本'], [/New Features in ([^\r\n]+)/gi, '$1 的新增特性'], [/Technical changes in ([^\r\n]+)/gi, '$1 的技术性修改'], [/Changes in ([^\r\n]+)/gi, '$1 的修改内容'], [/Fixed bugs in ([^\r\n]+)/gi, '$1 修复的漏洞'], [/STABILITY AND PERFORMANCE/gi, '性能与稳定性'], [/FEATURES AND BUG FIXES/gi, '特性和漏洞修复'],[/LOOT/gi, '战利品'], [/PARITY/gi, '趋同'], [/Components/gi, '组件'], [/ADD-ONS AND SCRIPT ENGINE/gi, '附加包和脚本引擎'], [/DRESSING ROOM/gi, '更衣室'], [/Item/gi, '物品'], [/CHANGES/gi, '改动'], [/SOUNDS/gi, '音效'], [/DATA PACK VERSION/gi, '数据包版本'], [/PREDICATES/gi, '谓词'], [/ PREDICATE/gi, '谓词'], [/EFFECT/gi, '效果'], [/COMMAND/gi, '命令'], [/ATTRIBUTE/gi, '属性'], [/BLOCK/gi, '方块'], [/ENTITY/gi, '实体'], [/ENCHANTMENTS/gi, '附魔'], [/ TAGS/gi, '标签'], [/TAGS/gi, '标签'], [/TYPE/gi, '类型'], [/MUSIC/gi, '音乐'], [/GAME TIPS/gi, '游戏提示'], [/NEW FEATURES/gi, '新特性'], [/NEW /gi, '新的'], [/USER INTERFACE/gi, '用户界面'], [/EDITOR/gi, '编辑器'], [/FIXES/gi, '修复'], [/IMPROVEMENTS/gi, '改进'], [/RESOURCE PACK VERSION/gi, '资源包版本'], [/SHADERS/gi, '着色器'], [/PARTICLES/gi, '粒子效果'], [/TOUCH CONTROLS/gi, '触控'], [/TECHNICAL UPDATES/gi, '技术性更新'], [/ TABLES/gi, '表'], [/PROJECTILES/gi, '弹射物'], [/STRUCTURES/gi, '结构'], [/ENTITIES/gi, '实体'], [/FUNCTIONS/gi, '函数']]);
     },
     imgCredits: (input, ctx) => {
@@ -815,9 +815,10 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
               return node.nodeValue;
           }
       };
-      const rawInnerArray = await Promise.all(Array.from(ele.childNodes).map(processNode));
-      const inner = rawInnerArray.join('').trim();
-  
+
+      let inner = await converters.recurse(ele, ctx);
+      inner = inner ? inner.trim() : '';
+
       let ans;
   
       if (inner === '') {
@@ -851,12 +852,7 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
       return ans;
     },
     figure: async (ele, ctx) => {
-      console.log("Processing <figure> element:", ele);
-
-      // 递归处理 figure 内部的所有元素
       const ans = await converters.recurse(ele, ctx);
-      console.log("Recurse output for <figure> element:", ans);
-
       return ans;
     },
     pre: async (ele, ctx) => {

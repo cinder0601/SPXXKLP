@@ -115,6 +115,41 @@
   const spxxklpVersion = version;
   const url1 = window.location.href;
 
+  function getReleaseVersionCode(url){
+    const lowerUrl = url.toLowerCase();
+    if (lowerUrl.includes('pre-release')) {
+      const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-release/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match.length >= 3) {
+        const Version1 = match[1];
+        const Version2 = match[2];
+        const Version3 = match[3];
+        if (Version3 == "") {
+          const formattedVersion = `${Version1}.${Version2}`;
+          return formattedVersion;
+        } else {
+          const formattedVersion = `${Version1}.${Version2}.${Version3}`;
+          return formattedVersion;
+        }
+      }
+    } else if (lowerUrl.includes('release-candidate')) {
+      const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-candidate/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match.length >= 3) {
+        const Version1 = match[1];
+        const Version2 = match[2];
+        const Version3 = match[3];
+        if (Version3 == "") {
+          const formattedVersion = `${Version1}.${Version2}`;
+          return formattedVersion;
+        } else {
+          const formattedVersion = `${Version1}.${Version2}.${Version3}`;
+          return formattedVersion;
+        }
+      }
+    }
+  }
+
   function getVersionCode(url){
     const lowerUrl = url.toLowerCase();
     if (lowerUrl.includes('snapshot')) {
@@ -126,7 +161,7 @@
     } else if (lowerUrl.includes('pre-release')) {
       const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-release-(\d+)/;
       const match = lowerUrl.match(versionRegex);
-      if (match && match.length >= 5) {
+      if (match && match.length >= 4) {
         const Version1 = match[1];
         const Version2 = match[2];
         const Version3 = match[3];
@@ -142,7 +177,7 @@
     } else if (lowerUrl.includes('release-candidate')) {
       const versionRegex = /(\d+)-(\d+)-(\d*)(.+)-candidate-(\d+)/;
       const match = lowerUrl.match(versionRegex);
-      if (match && match.length >= 5) {
+      if (match && match.length >= 4) {
         const Version1 = match[1];
         const Version2 = match[2];
         const Version3 = match[3];
@@ -191,12 +226,31 @@
     }
   }
 
+  function getVersionCount(url){
+    const lowerUrl = url.toLowerCase();
+    if (lowerUrl.includes('pre-release')) {
+      const versionRegex = /-release-(\d+)/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match[1]) {
+        return match[1];
+      }
+    } else if (lowerUrl.includes('release-candidate')) {
+      const versionRegex = /-candidate-(\d+)/;
+      const match = lowerUrl.match(versionRegex);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+  }
+
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = 'https://www.minecraft.net/etc.clientlibs/minecraftnet/clientlibs/clientlib-site/resources/fonts/MinecraftTen.woff';
   document.head.appendChild(link);
 
+  let releaseversioncode = getReleaseVersionCode(url1);
   let versioncode = getVersionCode(url1);
+  let versioncount = getVersionCount(url1);
   function getHeader(articleType, type) {
     if (articleType.toLowerCase() !== 'news') {
       return `[color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
@@ -214,14 +268,14 @@
         return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft Java 版[/b]是指 Windows、Mac OS 与 Linux 平台上，使用 Java 语言开发的 Minecraft 版本。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4][b]预发布版[/b]是 Minecraft Java 版的测试机制，如果该版本作为正式版发布，那么预发布版的游戏文件将与启动器推送的正式版完全相同。[/size]
 [color=#f44336][size=5]|[/size][/color][size=4]然而，预发布版主要用于服主和 Mod 制作者的预先体验，如果发现重大漏洞，该预发布版会被新的预发布版代替。因此建议普通玩家[color=Red]持观望态度[/color]。 [/size]
-[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个预览版。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 ${releaseversioncode} 仍未发布，${versioncode} 为其第 ${versioncount} 个预发布版。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.ReleaseCandidate:
         return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft Java 版[/b]是指运行在 Windows、Mac OS 与 Linux 平台上，使用 Java 语言开发的 Minecraft 版本。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4][b]候选版[/b]是 Minecraft Java 版正式版的候选版本，如果发现重大漏洞，该候选版会被新的候选版代替。如果一切正常，该版本将会作为正式版发布。[/size]
 [color=#f44336][size=5]|[/size][/color][size=4]候选版已可供普通玩家进行抢鲜体验，但仍需当心可能存在的漏洞。[/size]
-[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个预览版。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 ${releaseversioncode} 仍未发布，${versioncode} 为其第 ${versioncount} 个候选版。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.Release:

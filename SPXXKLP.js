@@ -1326,6 +1326,12 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
 
     for (let i = 0; i < containerElements.length; i++) {
         let rootDiv = containerElements[i];
+
+        let spanElements = rootDiv.querySelectorAll('span');
+        spanElements.forEach(spanElement => {
+          spanElement.innerHTML = spanElement.innerHTML.replace(/\n/g, ' ');
+        });
+
         let ans = await converters.recurse(rootDiv, ctx);
         ans = ans.replace(/([a-zA-Z0-9\-._])(\[[A-Za-z])/g, '$1 $2');
         ans = ans.replace(/(\[\/[^\]]+?])([a-zA-Z0-9\-._])/g, '$1 $2');

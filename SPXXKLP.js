@@ -1327,6 +1327,10 @@ Converted at ${time.getFullYear()}-${padTime(time.getMonth() + 1) // why +1 java
     for (let i = 0; i < containerElements.length; i++) {
         let rootDiv = containerElements[i];
 
+        let rootDivHTML = rootDiv.outerHTML.replace(/<h[1-5]>(?:&nbsp;|\s)*<\/h[1-5]>/g, '');
+        rootDiv = document.createElement('div');
+        rootDiv.innerHTML = rootDivHTML;
+
         let spanElements = rootDiv.querySelectorAll('span');
         spanElements.forEach(spanElement => {
           spanElement.innerHTML = spanElement.innerHTML.replace(/\n/g, ' ');

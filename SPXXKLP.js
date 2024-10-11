@@ -94,7 +94,7 @@
     },
   };
 
-  var version = "3.2.3";
+  var version = "3.2.4";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();

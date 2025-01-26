@@ -23,7 +23,7 @@
 // @grant       GM_registerMenuCommand
 // @license     MIT
 // @downloadURL https://update.greasyfork.org/scripts/491477/SPXXKLP.user.js
-// @updateURL   https://update.greasyfork.org/scripts/491477/SPXXKLP.meta.js
+// @updateURL https://update.greasyfork.org/scripts/491477/SPXXKLP.meta.js
 // ==/UserScript==
 (function () {
   "use strict";
@@ -1588,18 +1588,43 @@ Converted at ${time.getFullYear()}-${
   }
 
   async function getAuthor(html, translator = config.translator) {
-    let rawauthor = html.getElementsByClassName(
-      "MC_articleHeroA_attribution_author"
-    )[0];
-    let authorImgUrl = rawauthor.getElementsByTagName("img")[0].src;
-    let authorName = rawauthor.getElementsByTagName("dd")[0].innerText;
-    let publishDate = rawauthor.getElementsByTagName("dd")[1].innerText;
-    let [year, month, day] = publishDate.split("/");
-    let url = window.location.href;
-    let title = await getMainTitle(html);
-    let ans = `\n[float=left][img]${authorImgUrl}[/img][/float]\n\n\n【${translator} 译自[url=${url}][color=#388d40][u]${authorName} ${year} 年 ${month} 月 ${day} 日发布的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${spxxklpVersion}】`;
-    return ans;
+    try {
+      let rawauthor = html.getElementsByClassName("MC_articleHeroA_attribution_author")[0];
+      if (!rawauthor) {
+        console.warn("Author attribution element not found");
+        return "Unknown Author";
+      }
+  
+      let authorImgUrl = "";
+      let authorImg = rawauthor.getElementsByTagName("img")[0];
+      if (authorImg && authorImg.src) {
+        authorImgUrl = authorImg.src;
+      }
+  
+      let authorName = "Unknown";
+      let authorNameElement = rawauthor.getElementsByTagName("dd")[0];
+      if (authorNameElement) {
+        authorName = authorNameElement.innerText;
+      }
+  
+      let publishDate = "Unknown Date";
+      let publishDateElement = rawauthor.getElementsByTagName("dd")[1];
+      if (publishDateElement) {
+        publishDate = publishDateElement.innerText;
+      }
+  
+      let [year, month, day] = publishDate.split("/");
+      let url = window.location.href;
+      let title = await getMainTitle(html);
+  
+      let ans = `\n${authorImgUrl ? `[float=left][img]${authorImgUrl}[/img][/float]\n\n\n` : ''}【${translator} 译自[url=${url}][color=#388d40][u]${authorName} ${year} 年 ${month} 月 ${day} 日发布的 ${title}[/u][/color][/url]】[/b]\n【本文排版借助了：[url=https://github.com/cinder0601/SPXXKLP][color=#388d40][u]SPXXKLP[/u][/color][/url] 用户脚本 v${spxxklpVersion}】`;
+      return ans;
+    } catch (error) {
+      console.error("Error in getAuthor function:", error);
+      return "Error retrieving author information";
+    }
   }
+  
 
   async function getContent(html, ctx) {
     let results = [];

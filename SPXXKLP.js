@@ -281,7 +281,7 @@
         return `[color=#388e3c][size=5]|[/size][/color][size=4][b]Minecraft Java 版[/b]是指 Windows、Mac OS 与 Linux 平台上，使用 Java 语言开发的 Minecraft 版本。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4][b]每周快照[/b]是 Minecraft Java 版的测试机制，主要用于下一个正式版的特性预览。[/size]
 [color=#f44336][size=5]|[/size][/color][size=4]然而，[b]每周快照[/b]主要用于新特性展示，通常存在大量漏洞。因此对于普通玩家建议仅做[color=Red][b]测试尝鲜[/b][/color]用。在快照中打开存档前请务必[color=Red][b]进行备份[/b][/color]。[b]适用于正式版的 Mod 不兼容快照，且大多数 Mod 都不对每周快照提供支持[/b]。 [/size]
-[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个预览版。[/size]
+[color=#f44336][size=5]|[/size][/color][size=4]Minecraft Java 版 <正式版版本号> 仍未发布，${versioncode} 为其第 <计数> 个快照。[/size]
 [color=#388e3c][size=5]|[/size][/color][size=4]本文内容按照 [/size][url=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans][size=4][color=#2e8b57][u]CC BY-NC-SA 4.0[/u][/color][/size][/url][size=4] 协议进行授权，[b]转载本帖时须注明[color=#ff0000]原作者[/color]以及[color=#ff0000]本帖地址[/color][/b]。[/size][hr]\n`;
 
       case VersionType.PreRelease:
@@ -1115,7 +1115,7 @@ Converted at ${time.getFullYear()}-${
           "imgCredits",
         ])}[/align]\n`;
       } else if (ele.classList.contains("lead")) {
-        ans = `[size=4][b][size=2][color=Silver]${inner}[/color][/size][/b][/size]\n[size=4][b]${translate(
+        ans = `[b][size=2][color=Silver]${inner}[/color][/size][/b]\n[size=4][b]${translate(
           inner,
           ctx,
           "headings"
@@ -1524,7 +1524,7 @@ Converted at ${time.getFullYear()}-${
     });
     const footer = getFooter(articleType, versionType);
     const author = await getAuthor(html);
-    const ans = `${header}${heroImage}\n[align=center][color=silver][size=6][b]${maintitle}[/b][/size][/color][/align][align=center][size=6][b]${maintitle}[/b][/size][/align]\n[align=center][color=silver][size=2]${subtitle}[/size][/color][/align][align=center][size=2]${subtitle}[/size][/align]\n\n${content}[b]${author}\n\n${footer}`;
+    const ans = `${header}${heroImage}\n[align=center][color=silver][size=6][b]${maintitle}[/b][/size][/color][/align]\n[align=center][size=6][b]${maintitle}[/b][/size][/align]\n[align=center][color=silver][size=2]${subtitle}[/size][/color][/align]\n[align=center][size=2]${subtitle}[/size][/align]\n\n${content}[b]${author}\n\n${footer}`;
     return ans;
   }
   /**
@@ -1613,7 +1613,17 @@ Converted at ${time.getFullYear()}-${
         publishDate = publishDateElement.innerText;
       }
   
-      let [year, month, day] = publishDate.split("/");
+      let [a, b, c] = publishDate.split("/");
+      let year, month, day;
+      if (a > 12) {
+        year = a;
+        month = b;
+        day = c;
+      } else {
+        year = "20" + c;
+        month = a;
+        day = b;
+      }
       let url = window.location.href;
       let title = await getMainTitle(html);
   
@@ -1889,9 +1899,16 @@ ${translate(
       const rsp = JSON.parse(value);
       res = new Date(rsp.article.created_at);
     });
-    const year = res.getFullYear();
-    const month = res.getMonth() + 1;
-    const day = res.getDate();
+    let year, month, day;
+    if (res.getFullYear() > 12) {
+      year = res.getFullYear();
+      month = res.getMonth() + 1;
+      day = res.getDate();
+    } else {
+      year = "20" + res.getDate();
+      month = res.getFullYear();
+      day = res.getMonth() + 1;
+    }
     return {
       year,
       month,

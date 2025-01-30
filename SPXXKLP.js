@@ -15,7 +15,7 @@
 // @match       https://help.minecraft.net/hc/en-us/articles/*
 // @require     https://fastly.jsdelivr.net/gh/sizzlemctwizzle/GM_config@2207c5c1322ebb56e401f03c2e581719f909762a/gm_config.js
 // @icon        https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon.ico
-// @version     3.2.4
+// @version     3.2.5
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_setClipboard
@@ -23,7 +23,7 @@
 // @grant       GM_registerMenuCommand
 // @license     MIT
 // @downloadURL https://update.greasyfork.org/scripts/491477/SPXXKLP.user.js
-// @updateURL https://update.greasyfork.org/scripts/491477/SPXXKLP.meta.js
+// @updateURL   https://update.greasyfork.org/scripts/491477/SPXXKLP.meta.js
 // ==/UserScript==
 (function () {
   "use strict";
@@ -94,7 +94,7 @@
     },
   };
 
-  var version = "3.2.4";
+  var version = "3.2.5";
 
   function getVersionType(url) {
     const lowerUrl = url.toLowerCase();
@@ -385,27 +385,17 @@ Converted at ${time.getFullYear()}-${
   const translators = {
     headings: (input, ctx) => {
       return translator(input, ctx, [
-        // Minecraft.net titles
         [/Block of the Week: /gi, "本周方块："],
         [/Taking Inventory: /gi, "背包盘点："],
         [/Around the Block: /gi, "群系漫游："],
         [/A Minecraft Java Snapshot/gi, "Minecraft Java版 快照"],
         [/A Minecraft Java Pre-Release/gi, "Minecraft Java版 预发布版"],
-        [/A Minecraft Java Release Candidate/gi, "Minecraft Java版 候选版本"], // Bedrock Edition titles
-        [
-          /Minecraft Beta (?:-|——) (.*?) \((.*?)\)/gi,
-          "Minecraft 基岩版 Beta $1（$2）",
-        ],
-        [
-          /Minecraft Beta & Preview - (.*?)/g,
-          "Minecraft 基岩版 Beta & Preview $1",
-        ],
+        [/A Minecraft Java Release Candidate/gi, "Minecraft Java版 候选版本"],
+        [/Minecraft Beta (?:-|——) (.*?) \((.*?)\)/gi, "Minecraft 基岩版 Beta $1（$2）"],
+        [/Minecraft Beta & Preview - (.*?)/g, "Minecraft 基岩版 Beta & Preview $1"],
         [/Minecraft (?:-|——) (.*?) \(Bedrock\)/gi, "Minecraft 基岩版 $1"],
-        [
-          /Minecraft (?:-|——) (.*?) \((.*?) Only\)/gi,
-          "Minecraft 基岩版 $1（仅$2）",
-        ],
-        [/Minecraft (?:-|——) (.*?) \((.*?)\)/gi, "Minecraft 基岩版 $1（仅$2）"], // BE subheadings
+        [/Minecraft (?:-|——) (.*?) \((.*?) Only\)/gi, "Minecraft 基岩版 $1（仅$2）"],
+        [/Minecraft (?:-|——) (.*?) \((.*?)\)/gi, "Minecraft 基岩版 $1（仅$2）"],
         [/Marketplace/gi, "市场"],
         [/Data-Driven/gi, "数据驱动"],
         [/Graphical/gi, "图像"],
@@ -427,7 +417,7 @@ Converted at ${time.getFullYear()}-${
         [/General/gi, "通用"],
         [/Technical Experimental Updates/gi, "实验性技术性更新"],
         [/Gametest Framework/gi, "Gametest 框架"],
-        [/Gametest Framework (experimental)/gi, "Gametest 框架（实验性）"], // JE subheadings
+        [/Gametest Framework (experimental)/gi, "Gametest 框架（实验性）"],
         [/Minecraft Snapshot /gi, "Minecraft 快照 "],
         [/ Pre-Release /gi, "-pre"],
         [/ Release Candidate /gi, "-rc"],
@@ -483,7 +473,6 @@ Converted at ${time.getFullYear()}-${
     },
     imgCredits: (input, ctx) => {
       return translator(input, ctx, [
-        // Creative Commons image credits
         [/Image credit:/gi, "图片来源："],
         [/CC BY-NC-ND/gi, "知识共享 署名-非商业性使用-禁止演绎"],
         [/CC BY-NC-SA/gi, "知识共享 署名-非商业性使用-相同方式共享"],
@@ -748,6 +737,12 @@ Converted at ${time.getFullYear()}-${
       return ans;
     },
     code: async (ele, ctx) => {
+      if (!ele || !await converters.recurse(ele, {
+        ...ctx,
+        disablePunctuationConverter: true,
+      })) {
+        return '';
+      }
       const prefix = ctx.multiLineCode
         ? "[code]"
         : "[backcolor=#f1edec][color=#7824c5][font=SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace]";
@@ -1428,7 +1423,7 @@ Converted at ${time.getFullYear()}-${
 
       const button = document.createElement("button");
       button.classList.add("spxxklp-userscript-ignored");
-      button.innerText = "复制 BBCode";
+      button.innerText = "复制 BBCode （KLPBBS）";
       // 按钮样式设置
       button.style.backgroundColor = "#3C8527";
       button.style.color = "#FFFFFF";
@@ -1441,7 +1436,7 @@ Converted at ${time.getFullYear()}-${
       button.style.fontFamily = "MinecraftTen, sans-serif";
 
       button.style.width = "140px";
-      button.style.height = "45px";
+      button.style.height = "70px";
       button.style.textAlign = "center";
       button.style.marginLeft = "auto";
 
@@ -1459,7 +1454,7 @@ Converted at ${time.getFullYear()}-${
           mimetype: "text/plain",
         });
         button.innerText = "已复制!";
-        setTimeout(() => (button.innerText = "复制 BBCode"), 5000);
+        setTimeout(() => (button.innerText = "复制 BBCode (KLPBBS)"), 5000);
       };
       const container = document.createElement("div");
       container.id = "spxxklp-buttons";
@@ -1683,7 +1678,7 @@ Converted at ${time.getFullYear()}-${
   function getZendesk(controlDOM, titleSlice, contentClass, versionType) {
     const button = document.createElement("a");
     button.classList.add("spxxklp-userscript-ignored", "navLink");
-    button.innerText = "复制 BBCode";
+    button.innerText = "复制 BBCode （KLPBBS）";
     // 按钮样式设置
     button.style.backgroundColor = "#3C8527";
     button.style.color = "#FFFFFF";
@@ -1695,7 +1690,7 @@ Converted at ${time.getFullYear()}-${
     button.style.transition = "background-color 0.3s ease";
 
     button.style.width = "120px";
-    button.style.height = "30px";
+    button.style.height = "50px";
     button.style.textAlign = "center";
     button.style.marginLeft = "auto";
 
@@ -1720,7 +1715,7 @@ Converted at ${time.getFullYear()}-${
         mimetype: "text/plain",
       });
       button.innerText = "已复制!";
-      setTimeout(() => (button.innerText = "复制 BBCode"), 5_000);
+      setTimeout(() => (button.innerText = "复制 BBCode （KLPBBS）"), 5_000);
     };
     const container = document.createElement("div");
     container.id = "spxxklp-buttons";
@@ -1775,7 +1770,7 @@ Converted at ${time.getFullYear()}-${
 
     const button = document.createElement("a");
     button.classList.add("spxxklp-userscript-ignored", "navLink");
-    button.innerText = "复制 BBCode";
+    button.innerText = "复制 BBCode （KLPBBS）";
     // 按钮样式设置
     button.style.backgroundColor = "#3C8527";
     button.style.color = "#FFFFFF";
@@ -1787,7 +1782,7 @@ Converted at ${time.getFullYear()}-${
     button.style.transition = "background-color 0.3s ease";
 
     button.style.width = "120px";
-    button.style.height = "30px";
+    button.style.height = "50px";
     button.style.textAlign = "center";
     button.style.marginLeft = "auto";
 
@@ -1811,7 +1806,7 @@ Converted at ${time.getFullYear()}-${
         mimetype: "text/plain",
       });
       button.innerText = "已复制!";
-      setTimeout(() => (button.innerText = "复制 BBCode"), 5000);
+      setTimeout(() => (button.innerText = "复制 BBCode （KLPBBS）"), 5000);
     };
     const container = document.createElement("div");
     container.id = "spxxklp-buttons";
@@ -2081,7 +2076,7 @@ ${translate(
       buttonLight.style.cursor = "pointer";
       buttonLight.style.transition = "background-color 0.3s ease";
       buttonLight.style.width = "180px";
-      buttonLight.style.height = "30px";
+      buttonLight.style.height = "50px";
       buttonLight.style.textAlign = "center";
       buttonLight.style.marginLeft = "auto";
 
@@ -2091,7 +2086,7 @@ ${translate(
       buttonLight.onmouseout = () => {
         buttonLight.style.backgroundColor = "rgb(255, 255, 255)";
       };
-      buttonLight.innerText = "复制 BBCode (浅色)";
+      buttonLight.innerText = "复制 BBCode （KLPBBS）（浅色）";
       buttonLight.onclick = async () => {
         buttonLight.innerText = "处理中...";
         try {
@@ -2102,7 +2097,7 @@ ${translate(
           console.error("Error processing BBCode (Light):", error);
           buttonLight.innerText = "错误!";
         }
-        setTimeout(() => (buttonLight.innerText = "复制 BBCode (浅色)"), 5000);
+        setTimeout(() => (buttonLight.innerText = "复制 BBCode （KLPBBS）（浅色）"), 5000);
       };
 
       const buttonDark = document.createElement("button");
@@ -2115,7 +2110,7 @@ ${translate(
       buttonDark.style.cursor = "pointer";
       buttonDark.style.transition = "background-color 0.3s ease";
       buttonDark.style.width = "180px";
-      buttonDark.style.height = "30px";
+      buttonDark.style.height = "50px";
       buttonDark.style.textAlign = "center";
       buttonDark.style.marginLeft = "auto";
 
@@ -2125,7 +2120,7 @@ ${translate(
       buttonDark.onmouseout = () => {
         buttonDark.style.backgroundColor = "rgb(32, 32, 32)";
       };
-      buttonDark.innerText = "复制 BBCode (深色)";
+      buttonDark.innerText = "复制 BBCode （KLPBBS）（深色）";
       buttonDark.onclick = async () => {
         buttonDark.innerText = "处理中...";
         try {
@@ -2136,7 +2131,7 @@ ${translate(
           console.error("Error processing BBCode (Dark):", error);
           buttonDark.innerText = "错误!";
         }
-        setTimeout(() => (buttonDark.innerText = "复制 BBCode (深色)"), 5000);
+        setTimeout(() => (buttonDark.innerText = "复制 BBCode （KLPBBS）（深色）"), 5000);
       };
 
       const checkLoaded = setInterval(() => {
